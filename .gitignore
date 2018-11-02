@@ -1,0 +1,19 @@
+
+build
+.DS_Store
+phpunit.local.xml
+*.log
+
+
+# IDE
+/nbproject/private/
+/vendor/
+nbproject/
+
+# Project
+var
+
+# Composer
+vendor
+composer.lock
+composer.phar
