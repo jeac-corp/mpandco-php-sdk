@@ -3,7 +3,7 @@ PHP SDK para mPandco RESTful APIs
 
 ### Si desea puede correr tests para verificar la compatibilidad de la SDK con su sistema
 
-Clonar proyecto "git clone git@github.com:wittygrowth/mpandco-php-sdk.git"
+Clonar proyecto "git clone git@github.com:jeac-corp/mpandco-php-sdk.git"
 
 
       git clone git@github.com:wittygrowth/mpandco-php-sdk.git
@@ -13,6 +13,8 @@ Clonar proyecto "git clone git@github.com:wittygrowth/mpandco-php-sdk.git"
       remote: Total 84 (delta 30), reused 68 (delta 19), pack-reused 0
       Receiving objects: 100% (84/84), 13.46 KiB | 551.00 KiB/s, done.
       Resolving deltas: 100% (30/30), done.
+
+Ejecutar "composer update" para instalar los paquetes.
 
 Ejecutar "./vendor/bin/simple-phpunit" para descargar phpunit, deberia ver una respuesta asi:
 
