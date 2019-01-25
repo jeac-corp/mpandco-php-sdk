@@ -17,8 +17,8 @@
         "ext-openssl": "*",
         "guzzlehttp/guzzle": "^6.3",
         "symfony/options-resolver": "~3.4 | ~4.2",
-        "jms/serializer": "~1.12.1",
-        "league/oauth2-client": "2.3.0",
+        "jms/serializer": "1.x-dev",
+        "league/oauth2-client": "~2.4",
         "monolog/monolog": "~1.23"
     },
     "require-dev": {
