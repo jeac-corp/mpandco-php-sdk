@@ -4,7 +4,8 @@
     "keywords": ["mpandco", "payments", "rest", "sdk"],
     "type": "library",
     "license": "Apache-2.0",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Carlos Mendoza",
@@ -19,10 +20,14 @@
         "symfony/options-resolver": "~3.4 | ~4.2",
         "jms/serializer": "1.x-dev",
         "league/oauth2-client": "~2.4",
-        "monolog/monolog": "~1.23"
+        "monolog/monolog": "~1.23",
+        "symfony/dependency-injection": "~3.4 | ~4.2",
+        "symfony/yaml": "~3.4 | ~4.2",
+        "symfony/config": "~3.4 | ~4.2",
+        "doctrine/cache": "^1.8"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "v4.1.1"
+        "symfony/phpunit-bridge": "~4.2"
     },
     "autoload": {
         "psr-4": { "JeacCorp\\": "lib/" },

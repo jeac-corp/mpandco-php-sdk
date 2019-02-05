@@ -1,0 +1,211 @@
+<?php
+
+/*
+ * This file is part of the Witty Growth C.A. - J406095737 package.
+ * 
+ * (c) www.mpandco.com
+ * 
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Pandco\Bundle\AppBundle\Entity\Module\Api\Payment;
+
+use Doctrine\ORM\Mapping as ORM;
+use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+
+/**
+ * Pago por Api de cobro
+ *
+ * @author Carlos Mendoza <inhack20@gmail.com>
+ * @ORM\Table(name="api_payment_intents")
+ * @ORM\Entity()
+ */
+class PaymentIntent extends ModelBase
+{
+    /**
+     * Intento de pago: Venta (se usa cuando un cliente emite un pago a otro por motivo de venta (carrito de compra))
+     */
+    const INTENT_SALE = "sale";
+    
+    /**
+     * Intento de pago: Autorizacion (se usa para que un cliente externo autorice un pago automatico cada cierto tiempo)
+     */
+    const INTENT_AUTHORIZE = "authorize";
+    
+    /**
+     * Intento de pago: Orden (Orden de pago que se envia por correo electronico para que la pagen con un boton de pago)
+     */
+    const INTENT_ORDER = "order";
+    
+    /**
+     * Intento de pago
+     * @var string self::INTENT_*
+     * @ORM\Column(type="string",length=20)
+     */
+    private $intent;
+    
+    /**
+     * Estatus
+     * @var string 
+     * @ORM\Column(type="string",length=20)
+     */
+    private $status;
+    
+    /**
+     * @var RedirectUrls
+     * @ORM\OneToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\RedirectUrls")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $redirectUrls;
+    
+    /**
+     * @var Transaction
+     * @ORM\OneToMany(targetEntity="Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\Transaction",mappedBy="payment")
+     */
+    private $transactions;
+    
+    /**
+     * Token publico para acceder al pago y no usar el ID
+     * @var string
+     * @ORM\Column(type="string",length=100)
+     */
+    private $token;
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->transactions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set intent
+     *
+     * @param string $intent
+     *
+     * @return Payment
+     */
+    public function setIntent($intent)
+    {
+        $this->intent = $intent;
+
+        return $this;
+    }
+
+    /**
+     * Get intent
+     *
+     * @return string
+     */
+    public function getIntent()
+    {
+        return $this->intent;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return Payment
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set token
+     *
+     * @param string $token
+     *
+     * @return Payment
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * Get token
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Set redirectUrls
+     *
+     * @param \Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\RedirectUrls $redirectUrls
+     *
+     * @return Payment
+     */
+    public function setRedirectUrls(\Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\RedirectUrls $redirectUrls)
+    {
+        $this->redirectUrls = $redirectUrls;
+
+        return $this;
+    }
+
+    /**
+     * Get redirectUrls
+     *
+     * @return \Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\RedirectUrls
+     */
+    public function getRedirectUrls()
+    {
+        return $this->redirectUrls;
+    }
+
+    /**
+     * Add transaction
+     *
+     * @param \Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\Transaction $transaction
+     *
+     * @return Payment
+     */
+    public function addTransaction(\Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\Transaction $transaction)
+    {
+        $this->transactions[] = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * Remove transaction
+     *
+     * @param \Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\Transaction $transaction
+     */
+    public function removeTransaction(\Pandco\Bundle\AppBundle\Entity\Module\Api\Payment\Transaction $transaction)
+    {
+        $this->transactions->removeElement($transaction);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+}

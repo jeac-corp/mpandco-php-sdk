@@ -1,0 +1,5 @@
+JeacCorp\Mpandco\Api\Payment\PaymentIntent:
+    exclusion_policy: ALL
+    properties:
+        intent:
+            expose: true
