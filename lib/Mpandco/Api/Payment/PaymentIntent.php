@@ -14,7 +14,7 @@ namespace JeacCorp\Mpandco\Api\Payment;
 use JeacCorp\Mpandco\Model\Payment\ModelPaymentIntent;
 
 /**
- * Intencion de pago por API
+ * Intencion de pago API
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
@@ -23,64 +23,40 @@ class PaymentIntent extends ModelPaymentIntent
 //    use \Pandco\Bundle\AppBundle\Model\Base\Traits\UserTrait;
     
     /**
-     * Se coloco aqui para colocarle un grupo aparte de serializacion
-     * @var string
-     *
-     * @ORM\Column(name="id", type="string", length=36)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     */
-    protected $id;
-    
-    /**
      * Pagador que autoriza a debitar
      * @var Payer
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Payer",mappedBy="paymentIntent",cascade={"persist","remove"})
      */
     private $payer;
 
     /**
      * Intento de pago
      * @var string self::INTENT_*
-     * @ORM\Column(type="string",length=20)
      */
     private $intent;
     
     /**
      * Estatus
      * @var string 
-     * @ORM\Column(type="string",length=20)
      */
     private $state;
     
     /**
      * @var RedirectUrls
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\RedirectUrls",cascade={"persist","remove"},mappedBy="paymentIntent")
      */
     private $redirectUrls;
     
     /**
      * @var Total
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Total",cascade={"persist","remove"},mappedBy="paymentIntent")
      */
     private $total;
     
     /**
      * @var Transaction
-     * @ORM\OneToMany(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction",mappedBy="paymentIntent",cascade={"persist","remove"})
      */
     private $transactions;
     
     /**
-     * Aplicacion que genero la intencion de pago
-     * @var \Pandco\Bundle\AppBundle\Entity\Auth\OAuthApp
-     * @ORM\ManyToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\Auth\OAuthApp")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $oAuthApp;
-
-    /**
-     * Variable volatil para calcular la cuenta electronica
+     * Persona que recibe la solicitud de pago
      * @var string
      */
     private $recipient;
@@ -90,7 +66,7 @@ class PaymentIntent extends ModelPaymentIntent
      */
     public function __construct()
     {
-        $this->transactions = [];
+        $this->transactions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**

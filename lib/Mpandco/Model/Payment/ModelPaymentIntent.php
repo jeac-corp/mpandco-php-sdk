@@ -56,27 +56,6 @@ abstract class ModelPaymentIntent extends ModelBase
      */
     const STATE_CANCELED = "canceled";
     
-    public abstract function getIntent();
-    
-    public abstract function getTransactions();
-    
-    public static function getIntentLabels() {
-        return [
-            "api.payment.intent.sale" => self::INTENT_SALE,
-//            "api.payment.intent.authorize" => self::INTENT_AUTHORIZE,
-//            "api.payment.intent.order" => self::INTENT_ORDER,
-            "api.payment.intent.request" => self::INTENT_REQUEST,
-        ];
-    }
-    
-    /**
-     * Es valido?
-     * @return type
-     */
-    public function isValidIntent() {
-        return in_array($this->getIntent(),[self::INTENT_SALE,self::INTENT_REQUEST,]);
-    }
-    
     /**
      * Resumen de la intencion
      * @return string
@@ -88,18 +67,5 @@ abstract class ModelPaymentIntent extends ModelBase
         }
         $description = implode(",", $descriptions);
         return $description;
-    }
-    
-    /**
-     * Ha expirado?
-     * @return boolean
-     */
-    public function isTimeExpired() {
-        $expired = false;
-        $ca = $this->getCreatedAt();
-        if($ca !== null && \Pandco\Bundle\AppBundle\Service\Util\UtilDate::getTotalMinutes($ca->diff(new \DateTime())) >= 30){
-            $expired = true;
-        }
-        return $expired;
     }
 }

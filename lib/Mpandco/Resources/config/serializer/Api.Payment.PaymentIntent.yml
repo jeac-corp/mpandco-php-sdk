@@ -1,5 +1,24 @@
 JeacCorp\Mpandco\Api\Payment\PaymentIntent:
     exclusion_policy: ALL
     properties:
+        payer:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Payment\Payer
         intent:
             expose: true
+            type: string
+        state:
+            expose: true
+            type: string
+        redirectUrls:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Payment\RedirectUrls
+        total:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Payment\Total
+        transactions:
+            expose: true
+            type: ArrayCollection<JeacCorp\Mpandco\Api\Payment\Transaction>
+        recipient:
+            expose: true
+            type: string
