@@ -1,0 +1,15 @@
+JeacCorp\Mpandco\Api\Master\Currency:
+    exclusion_policy: ALL
+    properties:
+        name:
+            expose: true
+            type: string
+        abbreviation:
+            expose: true
+            type: string
+        num:
+            expose: true
+            type: integer
+        numDecimals:
+            expose: true
+            type: integer

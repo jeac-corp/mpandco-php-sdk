@@ -11,43 +11,35 @@
 
 namespace JeacCorp\Mpandco\Api\Payment;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Direcciones de redireccion
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_redirect_urls")
- * @ORM\Entity()
  */
 class RedirectUrls extends ModelBase
 {
     /**
      * Intencion de pago
      * @var PaymentIntent
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\PaymentIntent",inversedBy="redirectUrls")
-     * @ORM\JoinColumn(nullable=false) 
      */
     private $paymentIntent;
     
     /**
      * Url de retorno si la el pago se aprueba
      * @var string
-     * @ORM\Column(type="text")
      */
     private $returnUrl;
     
     /**
      * Url de retorno si la operacion se cancela
      * @var string
-     * @ORM\Column(type="text")
      */
     private $cancelUrl;
     
     /**
      * @var RedirectUrls\HistoryResponse
-     * @ORM\OneToMany(targetEntity="JeacCorp\Mpandco\Api\Payment\RedirectUrls\HistoryResponse",mappedBy="redirectUrls",cascade={"persist","remove"})
      */
     private $historyResponses;
     

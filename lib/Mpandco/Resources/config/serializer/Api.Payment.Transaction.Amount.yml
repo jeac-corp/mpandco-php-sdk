@@ -1,0 +1,15 @@
+JeacCorp\Mpandco\Api\Payment\Transaction\Amount:
+    exclusion_policy: ALL
+    properties:
+#        transaction:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\Transaction
+        currency:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Master\Currency
+        total:
+            expose: true
+            type: float
+        details:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Payment\Transaction\Amount\Details

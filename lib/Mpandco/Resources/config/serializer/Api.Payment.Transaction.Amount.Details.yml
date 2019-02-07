@@ -1,0 +1,15 @@
+JeacCorp\Mpandco\Api\Payment\Transaction\Amount\Details:
+    exclusion_policy: ALL
+    properties:
+#        amount:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\Transaction\Amount
+        shipping:
+            expose: true
+            type: float
+        tax:
+            expose: true
+            type: float
+        subTotal:
+            expose: true
+            type: float

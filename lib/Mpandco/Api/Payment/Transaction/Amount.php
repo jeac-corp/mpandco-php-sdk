@@ -11,45 +11,36 @@
 
 namespace JeacCorp\Mpandco\Api\Payment\Transaction;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Monto de la transaccion
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_transactions_amounts")
- * @ORM\Entity()
  */
 class Amount extends ModelBase
 {
     /**
      * Transaccion
      * @var \JeacCorp\Mpandco\Api\Payment\Transaction
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction",inversedBy="amount")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $transaction;
     
     /**
      * Moneda
-     * @var \Pandco\Bundle\AppBundle\Entity\Master\Currency
-     * @ORM\ManyToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\Master\Currency")
-     * @ORM\JoinColumn(nullable=false)
+     * @var \JeacCorp\Mpandco\Api\Master\Currency
      */
     private $currency;
     
     /**
      * Total con IVA
      * @var float
-     * @ORM\Column(name="total", type="decimal", precision=50, scale=18, nullable=false) 
      */
     private $total;
     
     /**
      * Detalles del monto
-     * @var Amount\Details
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction\Amount\Details",cascade={"persist","remove"},mappedBy="amount")
+     * @var \JeacCorp\Mpandco\Api\Payment\Transaction\Amount\Details
      */
     private $details;
     

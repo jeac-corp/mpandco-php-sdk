@@ -1,0 +1,18 @@
+JeacCorp\Mpandco\Api\Payment\RedirectUrls\HistoryResponse:
+    exclusion_policy: ALL
+    properties:
+#        redirectUrls:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\RedirectUrls
+        uri:
+            expose: true
+            type: string
+        method:
+            expose: true
+            type: string
+        statusCode:
+            expose: true
+            type: integer
+        body:
+            expose: true
+            type: string

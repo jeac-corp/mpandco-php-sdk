@@ -11,51 +11,42 @@
 
 namespace JeacCorp\Mpandco\Api\Payment\RedirectUrls;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Historial de respuesta de las llamadas a las url de retorno
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_redirect_urls_history_responses")
- * @ORM\Entity()
  */
 class HistoryResponse extends ModelBase
 {
     /**
      * Asociada
      * @var \JeacCorp\Mpandco\Api\Payment\RedirectUrls
-     * @ORM\ManyToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\RedirectUrls",inversedBy="historyResponses")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $redirectUrls;
     
     /**
      * Url llamada
      * @var string
-     * @ORM\Column(type="string")
      */
     private $uri;
     
     /**
      * Metodo usado
      * @var string
-     * @ORM\Column(type="string")
      */
     private $method;
     
     /**
      * Codigo de respuesta
      * @var int 
-     * @ORM\Column(type="integer")
      */
     private $statusCode;
     
     /**
      * Respuesta
      * @var string 
-     * @ORM\Column(type="text")
      */
     private $body;
     

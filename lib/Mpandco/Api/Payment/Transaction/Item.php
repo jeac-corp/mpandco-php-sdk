@@ -11,51 +11,41 @@
 
 namespace JeacCorp\Mpandco\Api\Payment\Transaction;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Detalles del item a pagar
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_transactions_items")
- * @ORM\Entity()
  */
 class Item extends ModelBase
 {
     /**
      * Transaccion asociada
      * @var \JeacCorp\Mpandco\Api\Payment\Transaction
-     * @ORM\ManyToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction",inversedBy="items")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $transaction;
     
     /**
      * Nombre del item (cafe, pantalon)
      * @var string
-     * @ORM\Column(type="string",length=100)
      */
     private $name;
     
     /**
      * Cantidad de items
      * @var int
-     * @ORM\Column(type="integer")
      */
     private $quantity;
     
     /**
      * Moneda
-     * @var \Pandco\Bundle\AppBundle\Entity\Master\Currency
-     * @ORM\ManyToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\Master\Currency")
-     * @ORM\JoinColumn(nullable=false)
+     * @var \JeacCorp\Mpandco\Api\Master\Currency
      */
     private $currency;
     
     /**
      * Numero del producto o identificador
-     * @ORM\Column(type="string",length=50)
      * @var string 
      */
     private $sku;
@@ -63,7 +53,6 @@ class Item extends ModelBase
     /**
      * Precio sin IVA
      * @var float 
-     * @ORM\Column(name="amount", type="decimal", precision=50, scale=18, nullable=false)
      */
     private $price;
 

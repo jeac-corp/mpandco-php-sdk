@@ -1,0 +1,12 @@
+JeacCorp\Mpandco\Api\Payment\Transaction\RelatedResources:
+    exclusion_policy: ALL
+    properties:
+#        transaction:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\Transaction
+        sale:
+            expose: true
+            type: JeacCorp\Mpandco\Api\TransactionItem\Payment
+        request:
+            expose: true
+            type: JeacCorp\Mpandco\Api\TransactionItem\Payment

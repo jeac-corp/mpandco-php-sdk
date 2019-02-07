@@ -11,61 +11,49 @@
 
 namespace JeacCorp\Mpandco\Api\Payment;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
-use Pandco\Bundle\AppBundle\Service\Util\CurrencyUtil;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Core\CurrencyUtil;
 
 /**
  * Total
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_transactions_totals")
- * @ORM\Entity()
- * @ORM\HasLifecycleCallbacks()
  */
 class Total extends ModelBase
 {
     /**
      * Intencion de pago
      * @var PaymentIntent
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\PaymentIntent",inversedBy="total")
-     * @ORM\JoinColumn(nullable=false) 
      */
     private $paymentIntent;
     
     /**
      * Moneda
-     * @var \Pandco\Bundle\AppBundle\Entity\Master\Currency
-     * @ORM\ManyToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\Master\Currency")
-     * @ORM\JoinColumn(nullable=false)
+     * @var \JeacCorp\Mpandco\Api\Master\Currency
      */
     private $currency;
     
     /**
      * Totald item
      * @var float
-     * @ORM\Column(name="items", type="decimal", precision=50, scale=18, nullable=false) 
      */
     private $items;
     
     /**
      * Totald de Envio
      * @var float
-     * @ORM\Column(name="shipping", type="decimal", precision=50, scale=18, nullable=false) 
      */
     private $shipping;
     
     /**
      * Total de Impuestos
      * @var float
-     * @ORM\Column(name="tax", type="decimal", precision=50, scale=18, nullable=false)  
      */
     private $tax;
     
     /**
-     * Total (items + shipping + tax;)
+     * Total (items + shipping + tax)
      * @var float
-     * @ORM\Column(name="amount", type="decimal", precision=50, scale=18, nullable=false) 
      */
     private $amount;
     
@@ -89,7 +77,7 @@ class Total extends ModelBase
         return $this->amount;
     }
 
-    public function setCurrency(\Pandco\Bundle\AppBundle\Entity\Master\Currency $currency) {
+    public function setCurrency(\JeacCorp\Mpandco\Api\Master\Currency $currency) {
         $this->currency = $currency;
         return $this;
     }

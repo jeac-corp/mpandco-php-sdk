@@ -11,83 +11,59 @@
 
 namespace JeacCorp\Mpandco\Api\Payment;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Transacciones del pago
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_transactions")
- * @ORM\Entity()
  */
 class Transaction extends ModelBase
 {
     /**
-     * Se coloco aqui para colocarle un grupo aparte de serializacion
-     * @var string
-     *
-     * @ORM\Column(name="id", type="string", length=36)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     */
-    protected $id;
-    
-    /**
      * Intencion de pago asociado
      * @var PaymentIntent
-     * @ORM\ManyToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\PaymentIntent",inversedBy="transactions")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $paymentIntent;
     
     /**
      * Monto de la operacion sin IVA
      * @var \JeacCorp\Mpandco\Api\Payment\Transaction\Amount 
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction\Amount",cascade={"persist","remove"},mappedBy="transaction")
      */
     private $amount;
     
     /**
      * Elementos a cobrar
      * @var \JeacCorp\Mpandco\Api\Payment\Transaction\Item 
-     * @ORM\OneToMany(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction\Item",mappedBy="transaction",cascade={"persist","remove"})
      */
     private $items;
     
     /**
      * Descripcion de la operacion
      * @var string
-     * @ORM\Column(type="string",length=100) 
      */
     private $description;
     
     /**
      * Numero de factura asociada al pago
      * @var string
-     * @ORM\Column(type="string",length=100,nullable=true) 
      */
     private $invoiceNumber;
     
     /**
      * Recursos generados por la transaccion
-     * @var Transaction\RelatedResources 
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction\RelatedResources",mappedBy="transaction",cascade={"persist","remove"})
+     * @var \JeacCorp\Mpandco\Api\Payment\Transaction\RelatedResources 
      */
     private $relatedResources;
     
     /**
      * Tokens para realizar pagos
-     * @var Transaction\PayToken 
-     * @ORM\OneToMany(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction\PayToken",mappedBy="transaction",cascade={"persist","remove"})
+     * @var \JeacCorp\Mpandco\Api\Payment\Transaction\PayToken
      */
     private $payTokens;
     
     /**
      * Cuenta electronica a la cual se abonara el pago
-     * @var \Pandco\Bundle\AppBundle\Entity\User\DigitalAccount
-     * @ORM\ManyToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\User\DigitalAccount")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $digitalAccountDestination;
 
@@ -270,7 +246,7 @@ class Transaction extends ModelBase
         return $this->digitalAccountDestination;
     }
 
-    public function setDigitalAccountDestination(\Pandco\Bundle\AppBundle\Entity\User\DigitalAccount $digitalAccountDestination)
+    public function setDigitalAccountDestination($digitalAccountDestination)
     {
         $this->digitalAccountDestination = $digitalAccountDestination;
         return $this;

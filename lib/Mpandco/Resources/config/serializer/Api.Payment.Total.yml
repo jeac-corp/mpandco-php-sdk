@@ -1,0 +1,21 @@
+JeacCorp\Mpandco\Api\Payment\Total:
+    exclusion_policy: ALL
+    properties:
+#        paymentIntent:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\PaymentIntent
+        currency:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Payment\PaymentIntent
+        items:
+            expose: true
+            type: float
+        shipping:
+            expose: true
+            type: float
+        tax:
+            expose: true
+            type: float
+        amount:
+            expose: true
+            type: float

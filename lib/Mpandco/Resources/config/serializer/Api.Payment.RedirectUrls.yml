@@ -1,0 +1,15 @@
+JeacCorp\Mpandco\Api\Payment\RedirectUrls:
+    exclusion_policy: ALL
+    properties:
+#        paymentIntent:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\PaymentIntent
+        returnUrl:
+            expose: true
+            type: string
+        cancelUrl:
+            expose: true
+            type: string
+        historyResponses:
+            expose: true
+            type: ArrayCollection<JeacCorp\Mpandco\Api\Payment\RedirectUrls\HistoryResponse>

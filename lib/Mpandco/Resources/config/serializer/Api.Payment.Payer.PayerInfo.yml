@@ -1,0 +1,6 @@
+JeacCorp\Mpandco\Api\Payment\Payer\PayerInfo:
+    exclusion_policy: ALL
+#    properties:
+#        paymentIntent:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\PaymentIntent

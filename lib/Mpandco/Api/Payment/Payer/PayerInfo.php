@@ -11,8 +11,7 @@
 
 namespace JeacCorp\Mpandco\Api\Payment\Payer;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Informacion del pagador

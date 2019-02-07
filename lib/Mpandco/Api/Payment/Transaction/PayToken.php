@@ -11,41 +11,25 @@
 
 namespace JeacCorp\Mpandco\Api\Payment\Transaction;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Api\User\DigitalAccount;
 
 /**
  * Token de pago para una transaccion
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_transactions_pay_tokens",uniqueConstraints={@ORM\UniqueConstraint(name="mapt_idx", columns={"transaction_id", "digitalAccount_id"})})
- * @ORM\Entity()
  */
 class PayToken extends ModelBase
 {
     /**
-     * Se coloco aqui para colocarle un grupo aparte de serializacion
-     * @var string
-     *
-     * @ORM\Column(name="id", type="string", length=36)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="UUID")
-     */
-    protected $id;
-    
-    /**
      * Transaccion asociada
      * @var \JeacCorp\Mpandco\Api\Payment\Transaction
-     * @ORM\ManyToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction",inversedBy="payTokens")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $transaction;
     
     /**
      * Cuenta electronica de la cual se realizara el pago
-     * @var \Pandco\Bundle\AppBundle\Entity\User\DigitalAccount 
-     * @ORM\ManyToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\User\DigitalAccount")
-     * @ORM\JoinColumn(nullable=false)
+     * @var \JeacCorp\Mpandco\Api\User\DigitalAccount
      */
     private $digitalAccount;
     
@@ -62,7 +46,7 @@ class PayToken extends ModelBase
         return $this;
     }
 
-    public function setDigitalAccount(\Pandco\Bundle\AppBundle\Entity\User\DigitalAccount $digitalAccount) {
+    public function setDigitalAccount(DigitalAccount $digitalAccount) {
         $this->digitalAccount = $digitalAccount;
         return $this;
     }

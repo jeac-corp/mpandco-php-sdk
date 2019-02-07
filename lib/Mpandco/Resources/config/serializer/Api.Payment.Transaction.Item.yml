@@ -1,0 +1,21 @@
+JeacCorp\Mpandco\Api\Payment\Transaction\Item:
+    exclusion_policy: ALL
+    properties:
+#        transaction:
+#            expose: true
+#            type: JeacCorp\Mpandco\Api\Payment\Transaction
+        name:
+            expose: true
+            type: string
+        quantity:
+            expose: true
+            type: integer
+        currency:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Master\Currency
+        sku:
+            expose: true
+            type: string
+        price:
+            expose: true
+            type: float

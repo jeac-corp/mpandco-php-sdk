@@ -1,0 +1,6 @@
+JeacCorp\Mpandco\Api\TransactionItem\Payment:
+    exclusion_policy: ALL
+    properties:
+        ref:
+            expose: true
+            type: string

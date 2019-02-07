@@ -11,37 +11,30 @@
 
 namespace JeacCorp\Mpandco\Api\Payment\Transaction;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Recursos asociados generados a partir de la transaccion
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
- * @ORM\Table(name="api_payment_intents_transactions_related_resources")
- * @ORM\Entity()
  */
 class RelatedResources extends ModelBase
 {
     /**
      * Intencion de pago asociado
      * @var \JeacCorp\Mpandco\Api\Payment\Transaction
-     * @ORM\OneToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Transaction",inversedBy="relatedResources")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $transaction;
     
     /**
      * Pago asociado a la venta
-     * @var \Pandco\Bundle\AppBundle\Entity\User\TransactionItem\Payment
-     * @ORM\OneToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\User\TransactionItem\Payment")
+     * @var \JeacCorp\Mpandco\Api\TransactionItem\Payment
      */
     private $sale;
     
     /**
      * Solicitu de pago aosciado a la intencion
-     * @var \Pandco\Bundle\AppBundle\Entity\User\TransactionItem\Payment
-     * @ORM\OneToOne(targetEntity="Pandco\Bundle\AppBundle\Entity\User\TransactionItem\Payment")
+     * @var \JeacCorp\Mpandco\Api\TransactionItem\Payment
      */
     private $request;
     
@@ -58,7 +51,7 @@ class RelatedResources extends ModelBase
         return $this;
     }
 
-    public function setSale(\Pandco\Bundle\AppBundle\Entity\User\TransactionItem\Payment $sale) {
+    public function setSale(\JeacCorp\Mpandco\Api\TransactionItem\Payment $sale) {
         $this->sale = $sale;
         return $this;
     }
@@ -67,7 +60,7 @@ class RelatedResources extends ModelBase
         return $this->request;
     }
 
-    public function setRequest(\Pandco\Bundle\AppBundle\Entity\User\TransactionItem\Payment $request) {
+    public function setRequest(\JeacCorp\Mpandco\Api\TransactionItem\Payment $request) {
         $this->request = $request;
         return $this;
     }

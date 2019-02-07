@@ -11,8 +11,7 @@
 
 namespace JeacCorp\Mpandco\Api\Payment;
 
-use Doctrine\ORM\Mapping as ORM;
-use Pandco\Bundle\AppBundle\Model\Base\ModelBase;
+use JeacCorp\Mpandco\Model\Base\ModelBase;
 
 /**
  * Pagador
@@ -30,8 +29,6 @@ class Payer extends ModelBase
     /**
      * Usuario que realizo la autoriazacion del pago
      * @var \JeacCorp\Mpandco\Api\Payment\Payer\PayerInfo
-     * @ORM\ManyToOne(targetEntity="JeacCorp\Mpandco\Api\Payment\Payer\PayerInfo")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $payerInfo;
     
