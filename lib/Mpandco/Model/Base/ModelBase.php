@@ -48,6 +48,11 @@ class ModelBase
      */
     protected $updatedFromIp;
     
+    /**
+     * @var string
+     */
+    private $_links;
+
     public function getDeletedAt()
     {
         return $this->deletedAt;
@@ -145,4 +150,17 @@ class ModelBase
     public function getId() {
         return $this->id;
     }
+    /**
+     * @return \JeacCorp\Mpandco\Api\Link
+     */
+    public function getLink($name)
+    {
+        $link = new \JeacCorp\Mpandco\Api\Link();
+        if(isset($this->_links[$name])){
+            $link->setHref($this->_links[$name]["href"]);
+            $link->setMethod($this->_links[$name]["method"]);
+        }
+        return $link;
+    }
+    
 }

@@ -75,10 +75,15 @@ class Client
         require_once $file;
         $this->container = new \MyCachedContainer();
         
-        $paymentIntent = new \JeacCorp\Mpandco\Api\Payment\PaymentIntent();
-        $paymentIntent->setIntent("SALE");
-        $d = $this->serializer->serialize($paymentIntent,"json");
-        var_dump($d);
+//        $paymentIntent = new \JeacCorp\Mpandco\Api\Payment\PaymentIntent();
+//        $paymentIntent->setIntent("SALE");
+//        $d = $this->serializer->serialize($paymentIntent,"json");
+//        var_dump($d);
+    }
+    
+    public function getSerializer(): \JMS\Serializer\SerializerInterface
+    {
+        return $this->serializer;
     }
 
 }

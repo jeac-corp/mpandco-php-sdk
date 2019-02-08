@@ -26,12 +26,7 @@ class Link
      * @Type("string")
      */
     private $href;
-    /**
-     * Accion
-     * @var string 
-     * @Type("string")
-     */
-    private $rel;
+    
     /**
      * Metodo
      * @var string 
@@ -43,21 +38,12 @@ class Link
         return $this->href;
     }
 
-    public function getRel() {
-        return $this->rel;
-    }
-
     public function getMethod() {
         return $this->method;
     }
 
     public function setHref($href) {
         $this->href = $href;
-        return $this;
-    }
-
-    public function setRel($rel) {
-        $this->rel = $rel;
         return $this;
     }
 

@@ -19,3 +19,7 @@ JeacCorp\Mpandco\Model\Base\ModelBase:
         updatedFromIp:
             expose: true
             type: string
+        _links:
+            expose: true
+            type: array
+            serialized_name: _links

@@ -28,7 +28,8 @@
         "doctrine/collections": "^1.5"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "~4.2"
+        "symfony/phpunit-bridge": "~4.2",
+        "symfony/property-access": "~3.4 | ~4.2"
     },
     "autoload": {
         "psr-4": { "JeacCorp\\": "lib/" },
