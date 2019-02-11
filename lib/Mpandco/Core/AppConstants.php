@@ -16,7 +16,8 @@ namespace JeacCorp\Mpandco\Core;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class AppConstants {
+class AppConstants 
+{
     const SDK_NAME = 'mPandco-PHP-SDK';
     const SDK_VERSION = '1.0.0';
 
