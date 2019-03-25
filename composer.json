@@ -19,10 +19,11 @@
         "symfony/options-resolver": "~3.4 | ~4.2",
         "jms/serializer": "1.x-dev",
         "league/oauth2-client": "~2.4",
-        "monolog/monolog": "~1.23"
+        "monolog/monolog": "~1.23",
+        "symfony/filesystem": "^4.3@dev"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "v4.1.1"
+        "symfony/phpunit-bridge": "v4.2.4"
     },
     "autoload": {
         "psr-4": { "JeacCorp\\": "lib/" },

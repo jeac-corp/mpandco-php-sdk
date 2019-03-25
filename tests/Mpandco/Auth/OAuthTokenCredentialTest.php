@@ -15,6 +15,7 @@ use JeacCorp\Test\Mpandco\BaseTest;
 use JeacCorp\Mpandco\Auth\OAuthTokenCredential;
 use JeacCorp\Test\Mpandco\Constants;
 use JeacCorp\Mpandco\Core\ConfigManager;
+use JeacCorp\Mpandco\Cache\AuthorizationCache;
 
 /**
  * Test de manejador de token
@@ -25,10 +26,14 @@ class OAuthTokenCredentialTest extends BaseTest
 {
     public function testGetAccessToken()
     {
+        $config = ConfigManager::getInstance()->getConfigHashmap();
+        $cachePath = AuthorizationCache::cachePath($config);
+        if(file_exists($cachePath)){
+            unlink($cachePath);
+        }
         $cred = new OAuthTokenCredential(Constants::CLIENT_ID, Constants::CLIENT_SECRET);
         $this->assertEquals(Constants::CLIENT_ID, $cred->getClientId());
         $this->assertEquals(Constants::CLIENT_SECRET, $cred->getClientSecret());
-        $config = ConfigManager::getInstance()->getConfigHashmap();
         $token = $cred->getAccessToken($config);
         $this->assertNotNull($token);
 
