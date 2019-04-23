@@ -29,7 +29,8 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "~4.2",
-        "symfony/property-access": "~3.4 | ~4.2"
+        "symfony/property-access": "~3.4 | ~4.2",
+        "symfony/filesystem": "^4.3@dev"
     },
     "autoload": {
         "psr-4": { "JeacCorp\\": "lib/" },

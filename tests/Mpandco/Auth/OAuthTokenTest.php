@@ -24,14 +24,14 @@ class OAuthTokenTest extends BaseTest {
 
     const URL_END_POINT = "/oauth/v2/token";
 
-    public function testGetAccessToken() {
+    public function testGetAccessTokenClientCredentials() {
         $endPoint = ConfigManager::getInstance()->get("oauth.EndPoint") . self::URL_END_POINT;
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => Constants::CLIENT_ID, // The client ID assigned to you by the provider
             'clientSecret' => Constants::CLIENT_SECRET, // The client password assigned to you by the provider
-            'urlAuthorize' => 'http://service.example.com/authorize',
+            'urlAuthorize' => '',
             'urlAccessToken' => $endPoint,
-            'urlResourceOwnerDetails' => 'http://service.example.com/resource'
+            'urlResourceOwnerDetails' => ''
         ]);
         try {
 
@@ -39,6 +39,39 @@ class OAuthTokenTest extends BaseTest {
             $accessToken = $provider->getAccessToken('client_credentials');
             $this->assertNotNull($accessToken->getToken());
             $this->assertFalse($accessToken->hasExpired());
+        } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+
+            // Failed to get the access token
+            exit($e->getMessage());
+        }
+    }
+    
+    public function testGetAccessTokenPassword() {
+        $endPoint = ConfigManager::getInstance()->get("oauth.EndPoint") . self::URL_END_POINT;
+        $provider = new \League\OAuth2\Client\Provider\GenericProvider([
+            'clientId' => Constants::CLIENT_ID, // The client ID assigned to you by the provider
+            'clientSecret' => Constants::CLIENT_SECRET, // The client password assigned to you by the provider
+            'urlAuthorize' => '',
+            'urlAccessToken' => $endPoint,
+            'urlResourceOwnerDetails' => ''
+        ]);
+        try {
+
+            // Try to get an access token using the client credentials grant.
+            $accessToken = $provider->getAccessToken('password',[
+                'username' => '04140000010',
+                'password' => 'abc.12345'
+            ]);
+            $this->assertNotNull($accessToken->getToken());
+            $this->assertFalse($accessToken->hasExpired());
+            $this->assertNotNull($accessToken->getRefreshToken());
+            
+            $newAccessToken = $provider->getAccessToken('refresh_token', [
+                'refresh_token' => $accessToken->getRefreshToken(),
+            ]);
+            $this->assertNotNull($newAccessToken->getToken());
+            $this->assertFalse($newAccessToken->hasExpired());
+            
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
 
             // Failed to get the access token

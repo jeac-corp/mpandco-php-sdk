@@ -12,6 +12,7 @@
 namespace JeacCorp\Mpandco\Cache;
 
 use JeacCorp\Mpandco\Validation\JsonValidator;
+use JeacCorp\Mpandco\Core\ConfigManager;
 
 /**
  * Cache de token
@@ -130,7 +131,7 @@ abstract class AuthorizationCache
      */
     private static function getConfigValue($key, $config)
     {
-        $config = ($config && is_array($config)) ? $config : PayPalConfigManager::getInstance()->getConfigHashmap();
+        $config = ($config && is_array($config)) ? $config : ConfigManager::getInstance()->getConfigHashmap();
         return (array_key_exists($key, $config)) ? trim($config[$key]) : null;
     }
 }

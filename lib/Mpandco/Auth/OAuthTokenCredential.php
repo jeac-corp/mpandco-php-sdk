@@ -13,14 +13,17 @@ namespace JeacCorp\Mpandco\Auth;
 
 use JeacCorp\Mpandco\Security\Cipher;
 use JeacCorp\Mpandco\Cache\AuthorizationCache;
+use JeacCorp\Test\Mpandco\Constants;
+use JeacCorp\Mpandco\Handler\Exception\ConfigurationException;
+use JeacCorp\Mpandco\Core\LoggingManager;
 
 /**
  * Manejador de token de acceso
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class OAuthTokenCredential {
-
+class OAuthTokenCredential
+{
     public static $CACHE_PATH = '/../../../var/auth.cache';
 
     /**
@@ -78,7 +81,8 @@ class OAuthTokenCredential {
      * @param string $clientId     client id obtained from the developer portal
      * @param string $clientSecret client secret obtained from the developer portal
      */
-    public function __construct($clientId, $clientSecret) {
+    public function __construct($clientId, $clientSecret)
+    {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
         $this->cipher = new Cipher($this->clientSecret);
@@ -89,7 +93,8 @@ class OAuthTokenCredential {
      *
      * @return string
      */
-    public function getClientId() {
+    public function getClientId()
+    {
         return $this->clientId;
     }
 
@@ -98,7 +103,8 @@ class OAuthTokenCredential {
      *
      * @return string
      */
-    public function getClientSecret() {
+    public function getClientSecret()
+    {
         return $this->clientSecret;
     }
 
@@ -109,7 +115,8 @@ class OAuthTokenCredential {
      *
      * @return null|string
      */
-    public function getAccessToken($config) {
+    public function getAccessToken($config)
+    {
         // Check if we already have accessToken in Cache
         if ($this->accessToken && (time() - $this->tokenCreateTime) < ($this->tokenExpiresIn - self::$expiryBufferTime)) {
             return $this->accessToken;
@@ -156,40 +163,7 @@ class OAuthTokenCredential {
 
         return $this->accessToken;
     }
-    
-    /**
-     * Get a Refresh Token from Authorization Code
-     *
-     * @param $config
-     * @param $authorizationCode
-     * @param array $params optional arrays to override defaults
-     * @return string|null
-     */
-    public function getRefreshToken($config, $authorizationCode = null, $params = array())
-    {
-        static $allowedParams = array(
-            'grant_type' => 'authorization_code',
-            'code' => 1,
-            'redirect_uri' => 'urn:ietf:wg:oauth:2.0:oob',
-            'response_type' => 'token'
-        );
 
-        $params = is_array($params) ? $params : array();
-        if ($authorizationCode) {
-            //Override the authorizationCode if value is explicitly set
-            $params['code'] = $authorizationCode;
-        }
-        $payload = http_build_query(array_merge($allowedParams, array_intersect_key($params, $allowedParams)));
-
-        $response = $this->getToken($config, $this->clientId, $this->clientSecret, $payload);
-
-        if ($response != null && isset($response["refresh_token"])) {
-            return $response['refresh_token'];
-        }
-
-        return null;
-    }
-    
     /**
      * Retrieves the token based on the input configuration
      *
@@ -199,16 +173,27 @@ class OAuthTokenCredential {
      * @param string $payload
      * @return mixed
      * @throws PayPalConfigurationException
-     * @throws \PayPal\Exception\PayPalConnectionException
      */
     protected function getToken($config, $clientId, $clientSecret, $payload)
     {
-        $res = $connection->execute($payload);
-        $response = json_decode($res, true);
-
+        $provider = new \League\OAuth2\Client\Provider\GenericProvider([
+            'clientId' => $clientId, // The client ID assigned to you by the provider
+            'clientSecret' => $clientSecret, // The client password assigned to you by the provider
+            'urlAuthorize' => '',
+            'urlAccessToken' => self::_getEndpoint($config),
+            'urlResourceOwnerDetails' => ''
+        ]);
+        $response = null;
+        try {
+            // Try to get an access token using the client credentials grant.
+            $response = $provider->getAccessToken('client_credentials');
+        } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
+            // Failed to get the access token
+            throw $e;
+        }
         return $response;
     }
-    
+
     /**
      * Updates Access Token based on given input
      *
@@ -221,49 +206,47 @@ class OAuthTokenCredential {
         $this->generateAccessToken($config, $refreshToken);
         return $this->accessToken;
     }
-    
+
     /**
      * Get HttpConfiguration object for OAuth API
      *
      * @param array $config
      *
-     * @return PayPalHttpConfig
-     * @throws \PayPal\Exception\PayPalConfigurationException
+     * @return string
+     * @throws ConfigurationException
      */
     private static function _getEndpoint($config)
     {
         if (isset($config['oauth.EndPoint'])) {
             $baseEndpoint = $config['oauth.EndPoint'];
-        } elseif (isset($config['service.EndPoint'])) {
-            $baseEndpoint = $config['service.EndPoint'];
         } elseif (isset($config['mode'])) {
             switch (strtoupper($config['mode'])) {
                 case 'SANDBOX':
-                    $baseEndpoint = PayPalConstants::REST_SANDBOX_ENDPOINT;
+                    $baseEndpoint = Constants::REST_SANDBOX_ENDPOINT;
                     break;
                 case 'LIVE':
-                    $baseEndpoint = PayPalConstants::REST_LIVE_ENDPOINT;
+                    $baseEndpoint = Constants::REST_LIVE_ENDPOINT;
                     break;
                 default:
-                    throw new PayPalConfigurationException('The mode config parameter must be set to either sandbox/live');
+                    throw new ConfigurationException('The mode config parameter must be set to either sandbox/live');
             }
         } else {
             // Defaulting to Sandbox
-            $baseEndpoint = PayPalConstants::REST_SANDBOX_ENDPOINT;
+            $baseEndpoint = Constants::REST_SANDBOX_ENDPOINT;
         }
 
-        $baseEndpoint = rtrim(trim($baseEndpoint), '/') . "/v1/oauth2/token";
+        $baseEndpoint = rtrim(trim($baseEndpoint), '/') . "/oauth/v2/token";
 
         return $baseEndpoint;
     }
-    
+
     /**
      * Generates a new access token
      *
      * @param array $config
      * @param null|string $refreshToken
      * @return null
-     * @throws PayPalConnectionException
+     * @throws \JeacCorp\Mpandco\Handler\Exception\ConnectionException
      */
     private function generateAccessToken($config, $refreshToken = null)
     {
@@ -277,18 +260,26 @@ class OAuthTokenCredential {
         $payload = http_build_query($params);
         $response = $this->getToken($config, $this->clientId, $this->clientSecret, $payload);
 
-        if ($response == null || !isset($response["access_token"]) || !isset($response["expires_in"])) {
+        if ($response == null || empty($response->getToken()) || empty($response->getExpires())) {
             $this->accessToken = null;
             $this->tokenExpiresIn = null;
-            PayPalLoggingManager::getInstance(__CLASS__)->warning("Could not generate new Access token. Invalid response from server: ");
-            throw new PayPalConnectionException(null, "Could not generate new Access token. Invalid response from server: ");
+            LoggingManager::getInstance(__CLASS__)->warning("Could not generate new Access token. Invalid response from server: ");
+            throw new \JeacCorp\Mpandco\Handler\Exception\ConnectionException("Could not generate new Access token. Invalid response from server: ");
         } else {
-            $this->accessToken = $response["access_token"];
-            $this->tokenExpiresIn = $response["expires_in"];
+            $this->accessToken = $response->getToken();
+            $this->tokenExpiresIn = $response->getExpires();
         }
         $this->tokenCreateTime = time();
 
         return $this->accessToken;
     }
-
+    
+    private function encrypt($input)
+    {
+        return $this->cipher->encrypt($input);
+    }
+    private function decrypt($input)
+    {
+        return $this->cipher->decrypt($input);
+    }
 }
