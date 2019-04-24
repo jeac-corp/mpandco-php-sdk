@@ -16,6 +16,7 @@ use JeacCorp\Mpandco\Rest\Routes\RoutePaymentIntent;
 use JeacCorp\Mpandco\Api\Payment\PaymentIntent;
 use JeacCorp\Mpandco\Api\Payment\Transaction;
 use JeacCorp\Mpandco\Api\Payment\Transaction\Item;
+use JeacCorp\Mpandco\Api\Payment\Transaction\Amount;
 
 /**
  * Prueba de rutas de intencion de pago
@@ -37,19 +38,28 @@ class RoutePaymentIntentTest extends BaseTest
 
         $redirectUrls = new \JeacCorp\Mpandco\Api\Payment\RedirectUrls();
         $redirectUrls->setCancelUrl("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200")
-                    ->setReturnUrl("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200");
+                ->setReturnUrl("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200");
 
+        $amount = new Amount();
+        $amount->setTotal("20");
         $item = new Item();
-//        $item->setD
+        $item
+            ->setName("telefono")
+            ->setPrice("7.5")
+        ;
         $transaction = new Transaction();
-        $transaction->addItem($item);
-        
+        $transaction
+                ->setDescription("Compra por eBay")
+                ->setAmount($amount)
+                ->addItem($item);
+
         $paymentIntent = new PaymentIntent();
         $paymentIntent->setIntent(PaymentIntent::INTENT_SALE);
         $paymentIntent
                 ->setRedirectUrls($redirectUrls)
         ;
         $paymentIntent->addTransaction($transaction);
+        
         $routePaymentIntent->generate($paymentIntent);
     }
 
