@@ -12,6 +12,10 @@
 namespace JeacCorp\Test\Mpandco\Rest;
 
 use JeacCorp\Test\Mpandco\BaseTest;
+use JeacCorp\Mpandco\Rest\Routes\RoutePaymentIntent;
+use JeacCorp\Mpandco\Api\Payment\PaymentIntent;
+use JeacCorp\Mpandco\Api\Payment\Transaction;
+use JeacCorp\Mpandco\Api\Payment\Transaction\Item;
 
 /**
  * Prueba de rutas de intencion de pago
@@ -20,8 +24,33 @@ use JeacCorp\Test\Mpandco\BaseTest;
  */
 class RoutePaymentIntentTest extends BaseTest
 {
+
+    /**
+     * Generar intención de pago (Botón de pago).
+     */
     public function testGenerate()
     {
+        $routeService = $this->getRouteService();
+
+        $routePaymentIntent = $routeService->getPaymentIntent();
+        $this->assertInstanceOf(RoutePaymentIntent::class, $routePaymentIntent);
+
+        $redirectUrls = new \JeacCorp\Mpandco\Api\Payment\RedirectUrls();
+        $redirectUrls->setCancelUrl("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200")
+                    ->setReturnUrl("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200");
+
+        $item = new Item();
+//        $item->setD
+        $transaction = new Transaction();
+        $transaction->addItem($item);
         
+        $paymentIntent = new PaymentIntent();
+        $paymentIntent->setIntent(PaymentIntent::INTENT_SALE);
+        $paymentIntent
+                ->setRedirectUrls($redirectUrls)
+        ;
+        $paymentIntent->addTransaction($transaction);
+        $routePaymentIntent->generate($paymentIntent);
     }
+
 }

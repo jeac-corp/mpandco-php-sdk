@@ -207,21 +207,6 @@ class Transaction extends ModelBase
     }
 
     /**
-     * Add payToken
-     *
-     * @param \JeacCorp\Mpandco\Api\Payment\Transaction\PayToken $payToken
-     *
-     * @return Transaction
-     */
-    public function addPayToken(\JeacCorp\Mpandco\Api\Payment\Transaction\PayToken $payToken)
-    {
-        $payToken->setTransaction($this);
-        $this->payTokens[] = $payToken;
-
-        return $this;
-    }
-
-    /**
      * Remove payToken
      *
      * @param \JeacCorp\Mpandco\Api\Payment\Transaction\PayToken $payToken

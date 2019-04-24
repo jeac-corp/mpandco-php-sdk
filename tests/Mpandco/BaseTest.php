@@ -18,5 +18,24 @@ use PHPUnit\Framework\TestCase;
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-abstract class BaseTest extends TestCase {
+abstract class BaseTest extends TestCase
+{
+    /**
+     * @return \JeacCorp\Mpandco\Rest\Client
+     */
+    protected function getClient()
+    {
+        $client = new \JeacCorp\Mpandco\Rest\Client([
+        ]);
+        return $client;
+    }
+    
+    /**
+     * @return \JeacCorp\Mpandco\Rest\RouteService
+     */
+    protected function getRouteService()
+    {
+        $client = $this->getClient();
+        return $client->getContainer()->get(\JeacCorp\Mpandco\Rest\RouteService::class);
+    }
 }

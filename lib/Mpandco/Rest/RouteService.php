@@ -2,6 +2,8 @@
 
 namespace JeacCorp\Mpandco\Rest;
 
+use JeacCorp\Mpandco\Exception\InvalidRouteException;
+
 /**
  * Manejador de rutas
  *
@@ -40,6 +42,10 @@ class RouteService
      */
     public function getRoute($className)
     {
+        $reflection = new \ReflectionClass($className);
+        if(!$reflection->isSubclassOf(\JeacCorp\Mpandco\Model\Base\ModelRoute::class)){
+            throw new InvalidRouteException(sprintf("La ruta '%s' debe heredar de '%s'",$className,\JeacCorp\Mpandco\Model\Base\ModelRoute::class));
+        }
         $route = new $className($this->oAuth2Service,$this->restService);
         return $route;
     }
