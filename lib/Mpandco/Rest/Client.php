@@ -58,13 +58,14 @@ class Client
             "clientSecret" => null,
         ]);
         $this->options = $resolver->resolve($options);
+        $options = $this->options;
 
-        $this->serializer = SerializerBuilder::create()
-                ->addMetadataDir($this->options["serializer_dir"], "JeacCorp\\Mpandco")
-                ->setCacheDir($this->options["cache_dir"] . "/serializer")
-                ->setDebug($this->options["debug"])
-                ->build()
-        ;
+//        $this->serializer = SerializerBuilder::create()
+//                ->addMetadataDir($this->options["serializer_dir"], "JeacCorp\\Mpandco")
+//                ->setCacheDir($this->options["cache_dir"] . "/serializer")
+//                ->setDebug($this->options["debug"])
+//                ->build()
+//        ;
         $containerBuilder = new ContainerBuilder();
 
         $file = $this->options["cache_dir"] . '/Container.php';
@@ -74,6 +75,16 @@ class Client
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->setParameter("kernel.debug", $this->options["debug"]);
             $containerBuilder->setParameter("kernel.cache_dir", $this->options["cache_dir"]);
+            $definition = new \Symfony\Component\DependencyInjection\Definition(\JMS\Serializer\SerializerInterface::class);
+            $definition->setFactory(function() use ($options){
+                return SerializerBuilder::create()
+                        ->addMetadataDir($options["serializer_dir"], "JeacCorp\\Mpandco")
+                        ->setCacheDir($options["cache_dir"] . "/serializer")
+                        ->setDebug($options["debug"])
+                        ->build()
+                ;
+            });
+            $containerBuilder->setDefinition('serializer', $definition);
             $loader = new YamlFileLoader(
                 $containerBuilder,
                 new FileLocator(__DIR__.'/../Resources/config')
@@ -104,7 +115,7 @@ class Client
      */
     public function getSerializer()
     {
-        return $this->serializer;
+        return $this->getContainer()->get("serializer");
     }
     
     /**
