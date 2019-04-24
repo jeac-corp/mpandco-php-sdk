@@ -33,7 +33,7 @@ class UserAgent
             $curlVersion = curl_version();
             $featureList[] = 'curl=' . $curlVersion['version'];
         }
-        return sprintf("PayPalSDK/%s %s (%s)", $sdkName, $sdkVersion, implode('; ', $featureList));
+        return sprintf("mPandcoSDK/%s %s (%s)", $sdkName, $sdkVersion, implode('; ', $featureList));
     }
 
     /**

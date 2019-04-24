@@ -16,6 +16,7 @@ use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use JeacCorp\Mpandco\Core\ConfigManager;
 
 /**
  * Cliente que realizara todos los llamados
@@ -40,10 +41,13 @@ class Client
     {
         $rootDir = dirname(__DIR__, 3);
         $resolver = new OptionsResolver();
+        $configManager = ConfigManager::getInstance();
         $resolver->setDefaults([
             "debug" => true,
             "cache_dir" => $rootDir . "/var/cache",
             "serializer_dir" => __DIR__ . "/../Resources/config/serializer",
+            "client_id" => $configManager->get("clientId"),
+            "client_secret" => $configManager->get("clientSecret"),
         ]);
         $this->options = $resolver->resolve($options);
 
@@ -81,9 +85,11 @@ class Client
 //        var_dump($d);
     }
     
-    public function getSerializer(): \JMS\Serializer\SerializerInterface
+    /**
+     * @return \JMS\Serializer\SerializerInterface
+     */
+    public function getSerializer()
     {
         return $this->serializer;
     }
-
 }
