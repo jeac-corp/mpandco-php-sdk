@@ -180,7 +180,7 @@ class OAuthTokenCredential
             'clientId' => $clientId, // The client ID assigned to you by the provider
             'clientSecret' => $clientSecret, // The client password assigned to you by the provider
             'urlAuthorize' => '',
-            'urlAccessToken' => self::_getEndpoint($config),
+            'urlAccessToken' => self::getBaseUri($config),
             'urlResourceOwnerDetails' => ''
         ]);
         $response = null;
@@ -215,10 +215,10 @@ class OAuthTokenCredential
      * @return string
      * @throws ConfigurationException
      */
-    private static function _getEndpoint($config)
+    public static function getBaseUri($config)
     {
-        if (isset($config['oauth.EndPoint'])) {
-            $baseEndpoint = $config['oauth.EndPoint'];
+        if (isset($config['oauth.base_uri'])) {
+            $baseEndpoint = $config['oauth.base_uri'];
         } elseif (isset($config['mode'])) {
             switch (strtoupper($config['mode'])) {
                 case 'SANDBOX':

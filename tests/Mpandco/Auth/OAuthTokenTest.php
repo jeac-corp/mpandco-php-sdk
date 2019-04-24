@@ -25,7 +25,7 @@ class OAuthTokenTest extends BaseTest {
     const URL_END_POINT = "/oauth/v2/token";
 
     public function testGetAccessTokenClientCredentials() {
-        $endPoint = ConfigManager::getInstance()->get("oauth.EndPoint") . self::URL_END_POINT;
+        $endPoint = ConfigManager::getInstance()->get("oauth.base_uri") . self::URL_END_POINT;
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => Constants::CLIENT_ID, // The client ID assigned to you by the provider
             'clientSecret' => Constants::CLIENT_SECRET, // The client password assigned to you by the provider
@@ -47,7 +47,7 @@ class OAuthTokenTest extends BaseTest {
     }
     
     public function testGetAccessTokenPassword() {
-        $endPoint = ConfigManager::getInstance()->get("oauth.EndPoint") . self::URL_END_POINT;
+        $endPoint = ConfigManager::getInstance()->get("oauth.base_uri") . self::URL_END_POINT;
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => Constants::CLIENT_ID, // The client ID assigned to you by the provider
             'clientSecret' => Constants::CLIENT_SECRET, // The client password assigned to you by the provider
@@ -80,7 +80,7 @@ class OAuthTokenTest extends BaseTest {
     }
 
     public function testInvalidCredentials() {
-        $endPoint = ConfigManager::getInstance()->get("oauth.EndPoint") . self::URL_END_POINT;
+        $endPoint = ConfigManager::getInstance()->get("oauth.base_uri") . self::URL_END_POINT;
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => "invalid", // The client ID assigned to you by the provider
             'clientSecret' => "invalid", // The client password assigned to you by the provider

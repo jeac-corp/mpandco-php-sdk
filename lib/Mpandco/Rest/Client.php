@@ -17,6 +17,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use JeacCorp\Mpandco\Core\ConfigManager;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * Cliente que realizara todos los llamados
@@ -33,21 +35,27 @@ class Client
     private $options = null;
     
     /**
+     * @var ConfigManager 
+     */
+    private $configManager;
+
+
+    /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     private $container;
 
-    public function __construct(array $options = [])
+    public function __construct(array $configs = [],array $options = [])
     {
         $rootDir = dirname(__DIR__, 3);
+        $this->configManager = ConfigManager::getInstance($configs);
         $resolver = new OptionsResolver();
-        $configManager = ConfigManager::getInstance();
         $resolver->setDefaults([
             "debug" => true,
             "cache_dir" => $rootDir . "/var/cache",
             "serializer_dir" => __DIR__ . "/../Resources/config/serializer",
-            "client_id" => $configManager->get("clientId"),
-            "client_secret" => $configManager->get("clientSecret"),
+            "clientId" => null,
+            "clientSecret" => null,
         ]);
         $this->options = $resolver->resolve($options);
 
@@ -66,6 +74,12 @@ class Client
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->setParameter("kernel.debug", $this->options["debug"]);
             $containerBuilder->setParameter("kernel.cache_dir", $this->options["cache_dir"]);
+            $loader = new YamlFileLoader(
+                $containerBuilder,
+                new FileLocator(__DIR__.'/../Resources/config')
+            );
+            $loader->load('services.yaml');
+            
             // ...
             $containerBuilder->compile();
 
@@ -91,5 +105,18 @@ class Client
     public function getSerializer()
     {
         return $this->serializer;
+    }
+    
+    /**
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+    
+    public function getConfig(): ConfigManager
+    {
+        return $this->configManager;
     }
 }

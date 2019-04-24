@@ -1,6 +1,6 @@
 <?php
 
-namespace JeacCorp\Mpandco\Handler\Exception;
+namespace JeacCorp\Mpandco\Exception;
 
 use Exception;
 

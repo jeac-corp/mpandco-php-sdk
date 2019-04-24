@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use JeacCorp\Mpandco\Common\UserAgent;
 use JeacCorp\Mpandco\Core\AppConstants;
+use JeacCorp\Mpandco\Core\ConfigManager;
 
 /**
  * Servicio para hacer llamadas HTTPs
@@ -27,16 +28,19 @@ class RestService
     
     public function __construct(array $options = [])
     {
+        $configManager = ConfigManager::getInstance();
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
-            "timeout" => 30,
+            "timeout" => $configManager->get("http.connection_time_out"),
             "allow_redirects" => false,
+            "app_name" => AppConstants::SDK_NAME,
+            "base_uri" => \JeacCorp\Mpandco\Auth\OAuthTokenCredential::getBaseUri($configManager->getConfigHashmap()),
         ]);
         $resolver->setDefined([
             "proxy"
         ]);
         $resolver->setRequired([
-            "app_name","base_uri"
+            "app_name",
         ]);
         $this->options = $resolver->resolve($options);
         $this->options["headers"] = [

@@ -26,19 +26,19 @@ class ConfigManagerTest extends BaseTest
         
         $this->assertCount(0, $configManager->get("invalid"));
         $this->assertEquals("sandbox",$configManager->get("mode"));
-        $this->assertEquals("http://app.mpandco.local",$configManager->get("oauth.EndPoint"));
+        $this->assertEquals("http://app.mpandco.local",$configManager->get("oauth.base_uri"));
     }
     
     public function testFromArray() {
         $configManager = ConfigManager::getInstance();
         $configManager->addConfigs([
             "mode" => "live",
-            "log.LogEnabled" => false,
+            "log.log_enabled" => false,
         ]);
         
         $this->assertEquals("live",$configManager->get("mode"));
-        $this->assertEquals(false,$configManager->get("log.LogEnabled"));
-        $this->assertEquals(30,$configManager->get("http.ConnectionTimeOut"));
+        $this->assertEquals(false,$configManager->get("log.log_enabled"));
+        $this->assertEquals(30,$configManager->get("http.connection_time_out"));
         $this->assertEquals("log",$configManager->get("validation.level"));
     }
 }

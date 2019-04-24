@@ -65,10 +65,10 @@ class DefaultLogger extends AbstractLogger
     {
         $config = ConfigManager::getInstance()->getConfigHashmap();
         if (!empty($config)) {
-            $this->isLoggingEnabled = (array_key_exists('log.LogEnabled', $config) && $config['log.LogEnabled'] == '1');
+            $this->isLoggingEnabled = (array_key_exists('log.log_enabled', $config) && $config['log.log_enabled'] == '1');
             if ($this->isLoggingEnabled) {
-                $this->loggerFile = ($config['log.FileName']) ? $config['log.FileName'] : ini_get('error_log');
-                $loggingLevel = strtoupper($config['log.LogLevel']);
+                $this->loggerFile = ($config['log.file_name']) ? $config['log.file_name'] : ini_get('error_log');
+                $loggingLevel = strtoupper($config['log.log_level']);
                 $this->loggingLevel = (isset($loggingLevel) && defined("\\Psr\\Log\\LogLevel::$loggingLevel")) ?
                     constant("\\Psr\\Log\\LogLevel::$loggingLevel") :
                     LogLevel::INFO;

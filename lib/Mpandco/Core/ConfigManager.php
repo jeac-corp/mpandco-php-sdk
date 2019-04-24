@@ -37,13 +37,21 @@ class ConfigManager {
     /**
      * Private Constructor
      */
-    private function __construct() {
+    private function __construct(array $configs = []) {
+        $useIni = true;
+        if(isset($configs["use_ini"])){
+            $useIni = (bool)$configs["use_ini"];
+            var_dump($configs["use_ini"]);
+        }
+        unset($configs["use_ini"]);
+        
         if (defined('PP_CONFIG_PATH')) {
             $configFile = constant('PP_CONFIG_PATH') . '/parameters.ini';
         } else {
             $configFile = implode(DIRECTORY_SEPARATOR, array(dirname(__FILE__), "..", "config", "parameters.ini"));
         }
-        if (file_exists($configFile)) {
+        $this->addConfigs($configs);
+        if ($useIni && file_exists($configFile)) {
             $this->addConfigFromIni($configFile);
         }
     }
@@ -56,24 +64,25 @@ class ConfigManager {
      * @param array $configs
      * @return $this
      */
-    public function addConfigs($configs = array()) {
+    public function addConfigs(array $configs) {
         if ($this->configs === null) {
             $this->configs = [
                 'mode' => 'sandbox',
-                'http.ConnectionTimeOut' => 30,
-                'log.LogEnabled' => true,
-                'log.FileName' => '../api.log',
-                'log.LogLevel' => 'FINE',
+                'http.connection_time_out' => 30,
+                'log.log_enabled' => true,
+                'log.file_name' => '../api.log',
+                'log.log_level' => 'FINE',
                 'validation.level' => 'log',
-                "oauth.EndPoint" => null,
+                "oauth.base_uri" => null,
                 "cache.enabled" => true,
             ];
         }
         $resolver = new OptionsResolver();
-        $resolver->setRequired([
+        $resolver->setDefined([
             "clientId",
             "clientSecret"
         ]);
+//        $resolver->setDefined($optionNames);
         $resolver->setDefaults($this->configs);
         $resolver->setAllowedValues("mode", ["sandbox", "live"]);
 
@@ -99,9 +108,10 @@ class ConfigManager {
      *
      * @return ConfigManager
      */
-    public static function getInstance() {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
+    public static function getInstance(array $configs = null) {
+        if (!isset(self::$instance) || $configs !== null) {
+            //si $configs es diferente de null se debe reinicializar la instancia
+            self::$instance = new self($configs);
         }
         return self::$instance;
     }
