@@ -1,0 +1,15 @@
+JeacCorp\Mpandco\Model\OAuth\ErrorResponse:
+    exclusion_policy: ALL
+    properties:
+        code:
+            expose: true
+            type: integer
+        message:
+            expose: true
+            type: string
+        updatedAt:
+            expose: true
+            type: DateTime
+        errors:
+            expose: true
+            type: JeacCorp\Mpandco\Model\OAuth\ErrorResponse\Child

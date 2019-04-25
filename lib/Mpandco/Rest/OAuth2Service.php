@@ -53,15 +53,15 @@ class OAuth2Service
         
         $token = $this->oAuthTokenCredential->getAccessToken($config);
         $response = null;
-//        try {
+        try {
             $response = $excecute($method, $uri, $options,$token);
-//        } catch (ClientException $ex) {
-//            $response = $ex->getResponse();
-//            if($response->getStatusCode() === 401){
-//                $token = $this->oAuthTokenCredential->updateAccessToken($config);
-//                $response = $excecute($method, $uri, $options,$token);
-//            }
-//        }
+        } catch (ClientException $ex) {
+            $response = $ex->getResponse();
+            if($response->getStatusCode() ===  400){
+                $d = json_decode((string)$response->getBody(),true);
+                echo json_encode($d,JSON_PRETTY_PRINT);
+            }
+        }
         return $response;
     }
 

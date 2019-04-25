@@ -1,0 +1,9 @@
+JeacCorp\Mpandco\Model\OAuth\ErrorResponse\Child:
+    exclusion_policy: ALL
+    properties:
+        errors:
+            expose: true
+            type: array
+        children:
+            expose: true
+            type: ArrayCollection<string,JeacCorp\Mpandco\Model\OAuth\ErrorResponse\Child>

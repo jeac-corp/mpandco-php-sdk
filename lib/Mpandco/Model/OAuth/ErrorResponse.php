@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace JeacCorp\Mpandco\Model\Payment\OAuth;
+namespace JeacCorp\Mpandco\Model\OAuth;
 
 use JeacCorp\Mpandco\Model\Payment\OAuth\ErrorResponse\ErrorException;
 
@@ -33,16 +33,16 @@ class ErrorResponse
     private $message;
 
     /**
-     * @var Child
+     * @var ErrorResponse\Child
      */
     private $errors;
 
-    /**
-     * @var ErrorException
-     */
-    private $error;
+    public function __construct()
+    {
+//        $this->errors = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
-    /// <summary>
+        /// <summary>
     /// Retorna el primer error encontrado de una propiedad especifica
     /// </summary>
     /// <returns>The first error for property.</returns>
@@ -73,6 +73,11 @@ class ErrorResponse
     public function getMessage()
     {
         return $this->message;
+    }
+    
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
 }
