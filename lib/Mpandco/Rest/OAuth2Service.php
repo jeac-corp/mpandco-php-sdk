@@ -73,14 +73,14 @@ class OAuth2Service
             $response = $ex->getResponse();
             if($response->getStatusCode() ===  400){
                 $data = json_decode((string)$response->getBody(),true);
-                echo json_encode($data,JSON_PRETTY_PRINT);
+//                echo json_encode($data,JSON_PRETTY_PRINT);
                 $errorResponse = $this->serializer->deserialize((string)$response->getBody(),FormErrorResponse::class,"json");
             }
         } catch (ServerException $ex) {
             $response = $ex->getResponse();
             if($response->getStatusCode() ===  500){
                 $data = json_decode((string)$response->getBody(),true);
-                echo json_encode($data,JSON_PRETTY_PRINT);
+//                echo json_encode($data,JSON_PRETTY_PRINT);
             }
         }
         $rransactionResult = new TransactionResult($value,$response,$errorResponse);

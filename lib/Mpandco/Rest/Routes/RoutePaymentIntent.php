@@ -18,9 +18,9 @@ class RoutePaymentIntent extends ModelRoute
     const GENERATE = "api/payment-intent/.json";
     
     /**
-     * POST: Ejecuta una intencion de pago
+     * GET: Obtiene una intencion de pago
      */
-    const EXECUTE  = "api/payment-intent/execute/sale.json";
+    const GET  = "api/payment-intent/show.json";
     
     /**
      * 
@@ -62,5 +62,43 @@ class RoutePaymentIntent extends ModelRoute
 //        echo ((string)$transactionResult->getRawValue()->getStatusCode());
 //        echo ((string)$transactionResult->getRawValue()->getBody());
         return $transactionResult;
+    }
+    
+    /**
+     * Obtiene una intencion de pago
+     * @param type $id
+     * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult
+     */
+    public function get($id)
+    {
+        $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"GET",self::GET,[
+            'query' => ['id' => $id]
+        ]);
+        return $transactionResult;
+    }
+    
+    public function executeSale(PaymentIntent $paymentIntent,$payer)
+    {
+        $data  = [
+            "payment_execution" => [
+                "paymentIntent" => $paymentIntent->getId(),
+                "payer" => $payer,
+            ],
+        ];
+        
+        $href = $paymentIntent->getLink("execute")->getHref();
+        $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"POST",$href,[
+            "form_params" => $data,
+        ]);
+    }
+    
+    public function executeRequest(PaymentIntent $paymentIntent,$pin,PayToken $payToken)
+    {
+        $data  = [
+            "payment_execution" => [
+                "transactions" => [],
+                "pin" => $pin,
+            ],
+        ];
     }
 }

@@ -59,7 +59,7 @@ class TransactionResult
         $this->errorResponse = $errorResponse;
     }
     
-    public function getSuccess()
+    public function isSuccess()
     {
         return $this->success;
     }
