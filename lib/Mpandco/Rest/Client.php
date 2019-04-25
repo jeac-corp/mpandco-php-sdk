@@ -12,7 +12,6 @@
 namespace JeacCorp\Mpandco\Rest;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use JMS\Serializer\SerializerBuilder;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
@@ -53,19 +52,11 @@ class Client
         $resolver->setDefaults([
             "debug" => true,
             "cache_dir" => $rootDir . "/var/cache",
-            "serializer_dir" => __DIR__ . "/../Resources/config/serializer",
             "clientId" => null,
             "clientSecret" => null,
         ]);
         $this->options = $resolver->resolve($options);
-        $options = $this->options;
 
-//        $this->serializer = SerializerBuilder::create()
-//                ->addMetadataDir($this->options["serializer_dir"], "JeacCorp\\Mpandco")
-//                ->setCacheDir($this->options["cache_dir"] . "/serializer")
-//                ->setDebug($this->options["debug"])
-//                ->build()
-//        ;
         $containerBuilder = new ContainerBuilder();
 
         $file = $this->options["cache_dir"] . '/Container.php';
@@ -75,23 +66,14 @@ class Client
             $containerBuilder = new ContainerBuilder();
             $containerBuilder->setParameter("kernel.debug", $this->options["debug"]);
             $containerBuilder->setParameter("kernel.cache_dir", $this->options["cache_dir"]);
-            $definition = new \Symfony\Component\DependencyInjection\Definition(\JMS\Serializer\SerializerInterface::class);
-            $definition->setFactory(function() use ($options){
-                return SerializerBuilder::create()
-                        ->addMetadataDir($options["serializer_dir"], "JeacCorp\\Mpandco")
-                        ->setCacheDir($options["cache_dir"] . "/serializer")
-                        ->setDebug($options["debug"])
-                        ->build()
-                ;
-            });
-            $containerBuilder->setDefinition('serializer', $definition);
+            $containerBuilder->setParameter("kernel.root_dir", $rootDir);
+            
             $loader = new YamlFileLoader(
                 $containerBuilder,
                 new FileLocator(__DIR__.'/../Resources/config')
             );
             $loader->load('services.yaml');
             
-            // ...
             $containerBuilder->compile();
 
             $dumper = new PhpDumper($containerBuilder);
@@ -104,10 +86,6 @@ class Client
         require_once $file;
         $this->container = new \MyCachedContainer();
         
-//        $paymentIntent = new \JeacCorp\Mpandco\Api\Payment\PaymentIntent();
-//        $paymentIntent->setIntent("SALE");
-//        $d = $this->serializer->serialize($paymentIntent,"json");
-//        var_dump($d);
     }
     
     /**
@@ -115,7 +93,7 @@ class Client
      */
     public function getSerializer()
     {
-        return $this->getContainer()->get("serializer");
+        return $this->getContainer()->get(\JMS\Serializer\SerializerInterface::class);
     }
     
     /**

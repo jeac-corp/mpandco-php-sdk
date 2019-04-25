@@ -1,3 +1,6 @@
+parameters:
+    serializer.dir: "%kernel.root_dir%/lib/Mpandco/Resources/config/serializer"
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -14,4 +17,8 @@ services:
         exclude: ../../../../lib/{Cache,Exception}'
 
     JeacCorp\Mpandco\Rest\RouteService:
+        public: true
+    JMS\Serializer\SerializerInterface:
+        factory:   'JeacCorp\Mpandco\Common\FactoryService::createSerializer'
+        arguments: ['@service_container']
         public: true
