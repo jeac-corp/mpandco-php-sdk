@@ -16,6 +16,7 @@ use JeacCorp\Mpandco\Cache\AuthorizationCache;
 use JeacCorp\Test\Mpandco\Constants;
 use JeacCorp\Mpandco\Handler\Exception\ConfigurationException;
 use JeacCorp\Mpandco\Core\LoggingManager;
+use JeacCorp\Mpandco\Exception\ConnectionException;
 
 /**
  * Manejador de token de acceso
@@ -24,6 +25,8 @@ use JeacCorp\Mpandco\Core\LoggingManager;
  */
 class OAuthTokenCredential
 {
+    const TOKEN_ENDPOINT = "oauth/v2/token";
+    
     public static $CACHE_PATH = '/../../../var/auth.cache';
 
     /**
@@ -124,11 +127,6 @@ class OAuthTokenCredential
         // Check for persisted data first
         $token = AuthorizationCache::pull($config, $this->clientId);
         if ($token) {
-            // We found it
-            // This code block is for backward compatibility only.
-            if (array_key_exists('accessToken', $token)) {
-                $this->accessToken = $token['accessToken'];
-            }
 
             $this->tokenCreateTime = $token['tokenCreateTime'];
             $this->tokenExpiresIn = $token['tokenExpiresIn'];
@@ -180,7 +178,7 @@ class OAuthTokenCredential
             'clientId' => $clientId, // The client ID assigned to you by the provider
             'clientSecret' => $clientSecret, // The client password assigned to you by the provider
             'urlAuthorize' => '',
-            'urlAccessToken' => self::getBaseUri($config),
+            'urlAccessToken' => self::getEndPoint($config),
             'urlResourceOwnerDetails' => ''
         ]);
         $response = null;
@@ -215,6 +213,12 @@ class OAuthTokenCredential
      * @return string
      * @throws ConfigurationException
      */
+    private static function getEndPoint($config)
+    {
+//        $baseEndpoint = rtrim(trim(), '/') . self::TOKEN_ENDPOINT;
+        $baseEndpoint = self::getBaseUri($config) . self::TOKEN_ENDPOINT;
+        return $baseEndpoint;
+    }
     public static function getBaseUri($config)
     {
         if (isset($config['oauth.base_uri'])) {
@@ -235,8 +239,6 @@ class OAuthTokenCredential
             $baseEndpoint = Constants::REST_SANDBOX_ENDPOINT;
         }
 
-        $baseEndpoint = rtrim(trim($baseEndpoint), '/') . "/oauth/v2/token";
-
         return $baseEndpoint;
     }
 
@@ -246,7 +248,7 @@ class OAuthTokenCredential
      * @param array $config
      * @param null|string $refreshToken
      * @return null
-     * @throws \JeacCorp\Mpandco\Handler\Exception\ConnectionException
+     * @throws ConnectionException
      */
     private function generateAccessToken($config, $refreshToken = null)
     {
@@ -264,7 +266,7 @@ class OAuthTokenCredential
             $this->accessToken = null;
             $this->tokenExpiresIn = null;
             LoggingManager::getInstance(__CLASS__)->warning("Could not generate new Access token. Invalid response from server: ");
-            throw new \JeacCorp\Mpandco\Handler\Exception\ConnectionException("Could not generate new Access token. Invalid response from server: ");
+            throw new ConnectionException("Could not generate new Access token. Invalid response from server: ");
         } else {
             $this->accessToken = $response->getToken();
             $this->tokenExpiresIn = $response->getExpires();

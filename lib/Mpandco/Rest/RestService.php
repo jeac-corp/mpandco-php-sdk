@@ -26,6 +26,8 @@ class RestService
      */
     private $options;
     
+  
+    
     public function __construct(array $options = [])
     {
         $configManager = ConfigManager::getInstance();
@@ -47,8 +49,21 @@ class RestService
             'User-Agent' => UserAgent::getValue(AppConstants::SDK_NAME,AppConstants::SDK_VERSION),
             'Accept'     => 'application/json',
         ];
+        $this->client = new Client($this->options);
+    }
+    
+    /**
+     * Realiza una peticion
+     * @param type $method
+     * @param type $uri
+     * @param array $options
+     * @return \GuzzleHttp\Psr7\Response
+     */
+    public function request($method, $uri, array $options = []) {
+     var_dump($options);
+        $response = $this->client->request($method, $uri, $options);
         
-        $this->client = new Client($options);
+        return $response;
     }
 
 }

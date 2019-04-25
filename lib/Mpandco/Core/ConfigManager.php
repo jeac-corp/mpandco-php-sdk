@@ -37,20 +37,21 @@ class ConfigManager {
     /**
      * Private Constructor
      */
-    private function __construct(array $configs = []) {
+    private function __construct(array $configs = null) {
         $useIni = true;
-        if(isset($configs["use_ini"])){
-            $useIni = (bool)$configs["use_ini"];
-            var_dump($configs["use_ini"]);
+        if($configs !== null){
+            if(isset($configs["use_ini"])){
+                $useIni = (bool)$configs["use_ini"];
+            }
+            unset($configs["use_ini"]);
+            $this->addConfigs($configs);
         }
-        unset($configs["use_ini"]);
         
         if (defined('PP_CONFIG_PATH')) {
             $configFile = constant('PP_CONFIG_PATH') . '/parameters.ini';
         } else {
             $configFile = implode(DIRECTORY_SEPARATOR, array(dirname(__FILE__), "..", "config", "parameters.ini"));
         }
-        $this->addConfigs($configs);
         if ($useIni && file_exists($configFile)) {
             $this->addConfigFromIni($configFile);
         }
