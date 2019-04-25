@@ -181,10 +181,12 @@ class OAuthTokenCredential
             'urlAccessToken' => self::getEndPoint($config),
             'urlResourceOwnerDetails' => ''
         ]);
+        $clientApps = new Grant\ClientApps();
+        $provider->getGrantFactory()->setGrant("urn:client_apps", $clientApps);
         $response = null;
         try {
             // Try to get an access token using the client credentials grant.
-            $response = $provider->getAccessToken('client_credentials');
+            $response = $provider->getAccessToken('urn:client_apps');
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
             // Failed to get the access token
             throw $e;

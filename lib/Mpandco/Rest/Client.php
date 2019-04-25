@@ -26,11 +26,6 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  */
 class Client
 {
-    /**
-     * Serializador
-     * @var \JMS\Serializer\SerializerInterface 
-     */
-    private $serializer;
     private $options = null;
     
     /**
