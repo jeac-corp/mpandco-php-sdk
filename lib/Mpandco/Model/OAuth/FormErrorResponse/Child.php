@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace JeacCorp\Mpandco\Model\OAuth\ErrorResponse;
+namespace JeacCorp\Mpandco\Model\OAuth\FormErrorResponse;
 
 /**
  * Representa un error anidado
@@ -33,12 +33,18 @@ class Child
     {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
+    
+    /**
+     * Retorna todos los errores
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
     /**
+     * Error anidado por indice
      * @param type $key
      * @return Child
      */

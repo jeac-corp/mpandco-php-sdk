@@ -1,4 +1,4 @@
-JeacCorp\Mpandco\Model\OAuth\ErrorResponse\Child:
+JeacCorp\Mpandco\Model\OAuth\FormErrorResponse\Child:
     exclusion_policy: ALL
     properties:
         errors:
@@ -6,4 +6,4 @@ JeacCorp\Mpandco\Model\OAuth\ErrorResponse\Child:
             type: array
         children:
             expose: true
-            type: ArrayCollection<string,JeacCorp\Mpandco\Model\OAuth\ErrorResponse\Child>
+            type: ArrayCollection<string,JeacCorp\Mpandco\Model\OAuth\FormErrorResponse\Child>

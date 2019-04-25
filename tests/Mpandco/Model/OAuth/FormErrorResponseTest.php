@@ -13,25 +13,25 @@ namespace JeacCorp\Test\Mpandco\Model\OAuth;
 
 use JeacCorp\Test\Mpandco\BaseTest;
 use JeacCorp\Mpandco\Rest\Client;
-use JeacCorp\Mpandco\Model\OAuth\ErrorResponse;
+use JeacCorp\Mpandco\Model\OAuth\FormErrorResponse;
 
 /**
  * Pruebas del error 400 de symfony en el formulario
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class ErrorResponseTest extends BaseTest
+class FormErrorResponseTest extends BaseTest
 {
     public function testUnserialize()
     {
         $client = new Client();
         $data = $this->getJsonError();
-        $errorResponse = $client->getSerializer()->deserialize($data,ErrorResponse::class,"json");
+        $errorResponse = $client->getSerializer()->deserialize($data,FormErrorResponse::class,"json");
         $this->checkData($errorResponse);
 
     }
     
-    private function checkData(ErrorResponse $errorResponse)
+    private function checkData(FormErrorResponse $errorResponse)
     {
         $propertyAccessor = \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor();
         $errors = $errorResponse->getErrors();
