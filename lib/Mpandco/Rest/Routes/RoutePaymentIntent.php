@@ -22,6 +22,11 @@ class RoutePaymentIntent extends ModelRoute
      */
     const EXECUTE  = "api/payment-intent/execute/sale.json";
     
+    /**
+     * 
+     * @param PaymentIntent $paymentIntent
+     * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult PaymentIntent
+     */
     public function generate(PaymentIntent $paymentIntent)
     {
         $data  = [
@@ -47,14 +52,15 @@ class RoutePaymentIntent extends ModelRoute
                 ];
                 $t["items"][] = $i;
             }
-            $data["paymentintent"]["transactions"] = $t;
+            $data["paymentintent"]["transactions"][] = $t;
         }
 //        echo json_encode($data,JSON_PRETTY_PRINT);
-        $response = $this->oAuth2Service->request("POST",self::GENERATE,[
+        $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"POST",self::GENERATE,[
             "form_params" => $data,
         ]);
-//        var_dump($response);
-        echo ((string)$response->getStatusCode());
-        echo ((string)$response->getBody());
+//        var_dump($transactionResult->getValue());
+//        echo ((string)$transactionResult->getRawValue()->getStatusCode());
+//        echo ((string)$transactionResult->getRawValue()->getBody());
+        return $transactionResult;
     }
 }

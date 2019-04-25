@@ -60,7 +60,7 @@ class RestService
      * @return \GuzzleHttp\Psr7\Response
      */
     public function request($method, $uri, array $options = []) {
-     var_dump($options);
+//     var_dump($options);
         $response = $this->client->request($method, $uri, $options);
         
         return $response;

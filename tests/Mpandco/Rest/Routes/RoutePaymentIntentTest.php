@@ -60,7 +60,24 @@ class RoutePaymentIntentTest extends BaseTest
         ;
         $paymentIntent->addTransaction($transaction);
         
-        $routePaymentIntent->generate($paymentIntent);
+        $transactionResult = $routePaymentIntent->generate($paymentIntent);
+        
+        $pi = $transactionResult->getValue();
+        $this->assertInstanceOf(PaymentIntent::class,$pi);
+        
+        $this->assertNotNull($pi->getId());
+        $this->assertEquals(PaymentIntent::INTENT_SALE, $pi->getIntent());
+        $this->assertEquals(PaymentIntent::STATE_CREATED, $pi->getState());
+        $this->assertEquals("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200", $pi->getRedirectUrls()->getCancelUrl());
+        $this->assertEquals("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200", $pi->getRedirectUrls()->getReturnUrl());
+        
+        $transaction = $pi->getTransactions()->get(0);
+        $this->assertEquals("Compra por eBay", $transaction->getDescription());
+        $this->assertEquals("20", $transaction->getAmount()->getTotal());
+        $this->assertEquals("telefono", $transaction->getItems()->get(0)->getName());
+        $this->assertEquals("7.5", $transaction->getItems()->get(0)->getPrice());
+        
+        return $transactionResult;
     }
 
 }

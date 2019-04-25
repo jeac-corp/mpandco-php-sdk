@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\ClientException;
 use JMS\Serializer\SerializerInterface;
 use JeacCorp\Mpandco\Model\OAuth\FormErrorResponse;
 use JeacCorp\Mpandco\Model\OAuth\TransactionResult;
+use GuzzleHttp\Exception\ServerException;
 
 /**
  * Servicio de comunicacion oauth2
@@ -47,7 +48,7 @@ class OAuth2Service
      * @param array $options
      * @return TransactionResult
      */
-    public function request($method, $uri, array $options = [])
+    public function request($type,$method, $uri, array $options = [])
     {
         $restService = $this->restService;
         $config = ConfigManager::getInstance()->getConfigHashmap();
@@ -66,13 +67,20 @@ class OAuth2Service
         $errorResponse = null;
         try {
             $response = $excecute($method, $uri, $options,$token);
+            $data = (string)$response->getBody();
+            $value = $this->serializer->deserialize($data, $type,"json");
         } catch (ClientException $ex) {
             $response = $ex->getResponse();
             if($response->getStatusCode() ===  400){
-                
                 $data = json_decode((string)$response->getBody(),true);
                 echo json_encode($data,JSON_PRETTY_PRINT);
-                $errorResponse = $this->serializer->deserialize($data,FormErrorResponse::class,"json");
+                $errorResponse = $this->serializer->deserialize((string)$response->getBody(),FormErrorResponse::class,"json");
+            }
+        } catch (ServerException $ex) {
+            $response = $ex->getResponse();
+            if($response->getStatusCode() ===  500){
+                $data = json_decode((string)$response->getBody(),true);
+                echo json_encode($data,JSON_PRETTY_PRINT);
             }
         }
         $rransactionResult = new TransactionResult($value,$response,$errorResponse);

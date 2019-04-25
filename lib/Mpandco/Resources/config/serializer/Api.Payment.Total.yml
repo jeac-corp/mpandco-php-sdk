@@ -6,7 +6,7 @@ JeacCorp\Mpandco\Api\Payment\Total:
 #            type: JeacCorp\Mpandco\Api\Payment\PaymentIntent
         currency:
             expose: true
-            type: JeacCorp\Mpandco\Api\Payment\PaymentIntent
+            type: JeacCorp\Mpandco\Api\Master\Currency
         items:
             expose: true
             type: float
