@@ -50,8 +50,11 @@ class RoutePaymentIntent extends ModelRoute
             $data["paymentintent"]["transactions"] = $t;
         }
 //        echo json_encode($data,JSON_PRETTY_PRINT);
-        $response = $this->oAuth2Service->request("POST",self::GENERATE);
-        var_dump($response);
+        $response = $this->oAuth2Service->request("POST",self::GENERATE,[
+            "form_params" => $data,
+        ]);
+//        var_dump($response);
+        echo ((string)$response->getStatusCode());
         echo ((string)$response->getBody());
     }
 }
