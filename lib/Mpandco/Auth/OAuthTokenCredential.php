@@ -121,7 +121,7 @@ class OAuthTokenCredential
     public function getAccessToken($config)
     {
         // Check if we already have accessToken in Cache
-        if ($this->accessToken && (time() - $this->tokenCreateTime) < ($this->tokenExpiresIn - self::$expiryBufferTime)) {
+        if ($this->accessToken && (($this->tokenExpiresIn - self::$expiryBufferTime) < time()) ) {
             return $this->accessToken;
         }
         // Check for persisted data first
@@ -146,7 +146,7 @@ class OAuthTokenCredential
         // retrieved and subsequently used
         if (
                 $this->accessToken != null &&
-                (time() - $this->tokenCreateTime) > ($this->tokenExpiresIn - self::$expiryBufferTime)
+                ( ($this->tokenExpiresIn - self::$expiryBufferTime) < time() )
         ) {
             $this->accessToken = null;
         }
