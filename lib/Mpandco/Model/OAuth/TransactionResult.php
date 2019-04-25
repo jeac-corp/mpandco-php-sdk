@@ -42,7 +42,7 @@ class TransactionResult
      * Valor plano de respuesta
      * @var \GuzzleHttp\Psr7\Response
      */
-    private $rawValue;
+    private $response;
     
     /**
      * Error en respuesta de formulario
@@ -50,12 +50,12 @@ class TransactionResult
      */
     private $errorResponse;
     
-    public function __construct($value,Response $rawValue, FormErrorResponse $errorResponse = null)
+    public function __construct($value,Response $response, FormErrorResponse $errorResponse = null)
     {
-        $this->success = ($rawValue->getStatusCode() >= 200 && $rawValue->getStatusCode() <= 299);
-        $this->httpStatus = $rawValue->getStatusCode();
+        $this->success = ($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299);
+        $this->httpStatus = $response->getStatusCode();
         $this->value = $value;
-        $this->rawValue = $rawValue;
+        $this->response = $response;
         $this->errorResponse = $errorResponse;
     }
     
@@ -74,9 +74,9 @@ class TransactionResult
         return $this->value;
     }
 
-    public function getRawValue()
+    public function getResponse()
     {
-        return $this->rawValue;
+        return $this->response;
     }
 
     public function getErrorResponse()

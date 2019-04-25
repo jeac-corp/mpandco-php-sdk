@@ -65,7 +65,7 @@ class RoutePaymentIntentTest extends BaseTest
     /**
      * Generar intención de pago (Botón de pago).
      */
-    public function testGenerate()
+    public function testGenerateSale()
     {
         $routePaymentIntent = $this->getRoutePaymentIntent();
 
@@ -107,7 +107,7 @@ class RoutePaymentIntentTest extends BaseTest
     {
         $routePaymentIntent = $this->getRoutePaymentIntent();
         
-        $transactionResult = $this->testGenerate();
+        $transactionResult = $this->testGenerateSale();
         $this->assertTrue($transactionResult->isSuccess());
         
         $pi = $transactionResult->getValue();
@@ -117,6 +117,24 @@ class RoutePaymentIntentTest extends BaseTest
         $this->assertInstanceOf(PaymentIntent::class, $transactionResult->getValue());
         
         $this->checkData($transactionResult);
+    }
+    
+    /**
+     * Prueba la ejecucion de una intencion de venta
+     */
+    public function testExecuteSale()
+    {
+        $routePaymentIntent = $this->getRoutePaymentIntent();
+        
+        $transactionResult = $this->testGenerateSale();
+        $this->assertTrue($transactionResult->isSuccess());
+        
+        $pi = $transactionResult->getValue();
+        
+        //Hay que autorizar
+        $transactionResult = $routePaymentIntent->executeSale($pi, "ddds");
+        echo (string)$transactionResult->getResponse()->getBody();
+        $this->assertTrue($transactionResult->isSuccess());
     }
 
 }

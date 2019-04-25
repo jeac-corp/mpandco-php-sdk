@@ -59,8 +59,8 @@ class RoutePaymentIntent extends ModelRoute
             "form_params" => $data,
         ]);
 //        var_dump($transactionResult->getValue());
-//        echo ((string)$transactionResult->getRawValue()->getStatusCode());
-//        echo ((string)$transactionResult->getRawValue()->getBody());
+//        echo ((string)$transactionResult->getResponse()->getStatusCode());
+//        echo ((string)$transactionResult->getResponse()->getBody());
         return $transactionResult;
     }
     
@@ -77,6 +77,12 @@ class RoutePaymentIntent extends ModelRoute
         return $transactionResult;
     }
     
+    /**
+     * Ejecuta una intencoin de venta
+     * @param PaymentIntent $paymentIntent
+     * @param type $payer
+     * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult
+     */
     public function executeSale(PaymentIntent $paymentIntent,$payer)
     {
         $data  = [
@@ -90,6 +96,8 @@ class RoutePaymentIntent extends ModelRoute
         $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"POST",$href,[
             "form_params" => $data,
         ]);
+        
+        return $transactionResult;
     }
     
     public function executeRequest(PaymentIntent $paymentIntent,$pin,PayToken $payToken)
