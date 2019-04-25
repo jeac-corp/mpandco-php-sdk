@@ -3,6 +3,11 @@
 namespace JeacCorp\Mpandco\Rest;
 
 use JeacCorp\Mpandco\Exception\InvalidRouteException;
+use JeacCorp\Mpandco\Model\Base\ModelRoute;
+use JeacCorp\Mpandco\Rest\Routes\RoutePaymentIntent;
+use ReflectionClass;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use JMS\Serializer\SerializerInterface;
 
 /**
  * Manejador de rutas
@@ -11,28 +16,36 @@ use JeacCorp\Mpandco\Exception\InvalidRouteException;
  */
 class RouteService
 {
+    use ContainerAwareTrait;
+    
     /**
-     * @var \JeacCorp\Mpandco\Rest\OAuth2Service
+     * @var OAuth2Service
      */
     protected $oAuth2Service;
     
     /**
-     * @var \JeacCorp\Mpandco\Rest\RestService
+     * @var RestService
      */
     protected $restService;
     
-    public function __construct(\JeacCorp\Mpandco\Rest\OAuth2Service $oAuth2Service, \JeacCorp\Mpandco\Rest\RestService $restService)
+    /**
+     * @var SerializerInterface 
+     */
+    protected $serializer;
+    
+    public function __construct(OAuth2Service $oAuth2Service, RestService $restService,SerializerInterface $serializer)
     {
         $this->oAuth2Service = $oAuth2Service;
         $this->restService = $restService;
+        $this->serializer = $serializer;
     }
     
     /**
-     * @return Routes\RoutePaymentIntent
+     * @return RoutePaymentIntent
      */
     public function getPaymentIntent()
     {
-        return $this->getRoute(Routes\RoutePaymentIntent::class);
+        return $this->getRoute(RoutePaymentIntent::class);
     }
 
     /**
@@ -42,11 +55,11 @@ class RouteService
      */
     public function getRoute($className)
     {
-        $reflection = new \ReflectionClass($className);
-        if(!$reflection->isSubclassOf(\JeacCorp\Mpandco\Model\Base\ModelRoute::class)){
-            throw new InvalidRouteException(sprintf("La ruta '%s' debe heredar de '%s'",$className,\JeacCorp\Mpandco\Model\Base\ModelRoute::class));
+        $reflection = new ReflectionClass($className);
+        if(!$reflection->isSubclassOf(ModelRoute::class)){
+            throw new InvalidRouteException(sprintf("La ruta '%s' debe heredar de '%s'",$className,ModelRoute::class));
         }
-        $route = new $className($this->oAuth2Service,$this->restService);
+        $route = new $className($this->oAuth2Service,$this->restService, $this->serializer);
         return $route;
     }
 }
