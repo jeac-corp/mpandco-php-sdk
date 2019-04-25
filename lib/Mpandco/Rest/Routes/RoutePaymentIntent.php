@@ -52,6 +52,6 @@ class RoutePaymentIntent extends ModelRoute
 //        echo json_encode($data,JSON_PRETTY_PRINT);
         $response = $this->oAuth2Service->request("POST",self::GENERATE);
         var_dump($response);
-        var_dump((string)$response->getBody());
+        echo ((string)$response->getBody());
     }
 }

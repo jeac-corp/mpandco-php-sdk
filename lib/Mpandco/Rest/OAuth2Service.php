@@ -5,6 +5,7 @@ namespace JeacCorp\Mpandco\Rest;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use JeacCorp\Mpandco\Auth\OAuthTokenCredential;
 use JeacCorp\Mpandco\Core\ConfigManager;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * Servicio de comunicacion oauth2
@@ -39,14 +40,28 @@ class OAuth2Service
      */
     public function request($method, $uri, array $options = [])
     {
-        $token = $this->oAuthTokenCredential->getAccessToken(ConfigManager::getInstance()->getConfigHashmap());
-//        var_dump($token);
-        $options["headers"] = [
-            "Authorization" => "Bearer ".$token,
-        ];
-
-        $response = $this->restService->request($method, $uri, $options);
-
+        $restService = $this->restService;
+        $config = ConfigManager::getInstance()->getConfigHashmap();
+        
+        $excecute = function ($method, $uri, $options,$token) use ($restService){
+            $options["headers"] = [
+                "Authorization" => "Bearer ".$token,
+            ];
+            $response = $restService->request($method, $uri, $options);
+            return $response;
+        };
+        
+        $token = $this->oAuthTokenCredential->getAccessToken($config);
+        $response = null;
+        try {
+            $response = $excecute($method, $uri, $options,$token);
+        } catch (ClientException $ex) {
+            $response = $ex->getResponse();
+            if($response->getStatusCode() === 401){
+                $token = $this->oAuthTokenCredential->updateAccessToken($config);
+                $response = $excecute($method, $uri, $options,$token);
+            }
+        }
         return $response;
     }
 
