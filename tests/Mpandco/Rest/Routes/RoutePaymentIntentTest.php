@@ -124,6 +124,8 @@ class RoutePaymentIntentTest extends BaseTest
      */
     public function testExecuteSale()
     {
+        $routeService = $this->getRouteService();
+        $routeSandbox = $routeService->getRouteSandbox();
         $routePaymentIntent = $this->getRoutePaymentIntent();
         
         $transactionResult = $this->testGenerateSale();
@@ -131,10 +133,13 @@ class RoutePaymentIntentTest extends BaseTest
         
         $pi = $transactionResult->getValue();
         
-        //Hay que autorizar
-        $transactionResult = $routePaymentIntent->executeSale($pi, "ddds");
-        echo (string)$transactionResult->getResponse()->getBody();
+        //Autorizar
+        $response = $routeSandbox->paymentIntentAutorize($pi);
+        
+        $transactionResult = $routePaymentIntent->executeSale($pi,$response["payer"]);
+//        echo (string)$transactionResult->getResponse()->getBody();
         $this->assertTrue($transactionResult->isSuccess());
+        $this->assertEquals(PaymentIntent::STATE_EXECUTED,$transactionResult->getValue()->getState());
     }
 
 }

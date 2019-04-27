@@ -47,6 +47,13 @@ class RouteService
     {
         return $this->getRoute(RoutePaymentIntent::class);
     }
+    /**
+     * @return Routes\RouteSandbox
+     */
+    public function getRouteSandbox()
+    {
+        return $this->getRoute(Routes\RouteSandbox::class);
+    }
 
     /**
      * Retorna la ruta
