@@ -52,7 +52,21 @@ class RoutePaymentIntent extends ModelRoute
                 ];
                 $t["items"][] = $i;
             }
+            if($transaction->getDistributions()->count() > 0){
+                $t["distributions"] = [];
+                foreach($transaction->getDistributions() as $distribution){
+                    $d = [
+                        "digitalAccountDestination" => $distribution->getDigitalAccountDestination(),
+                        "amount" => $distribution->getAmount(),
+                        "description" => $distribution->getDescription(),
+                    ];
+                    $t["distributions"][] = $d;
+                }
+            }
             $data["paymentintent"]["transactions"][] = $t;
+        }
+        if(!empty($paymentIntent->getRecipient())){
+            $data["paymentintent"]["recipient"] = $paymentIntent->getRecipient();
         }
 //        echo json_encode($data,JSON_PRETTY_PRINT);
         $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"POST",self::GENERATE,[
@@ -100,7 +114,14 @@ class RoutePaymentIntent extends ModelRoute
         return $transactionResult;
     }
     
-    public function executeRequest(PaymentIntent $paymentIntent,$pin,PayToken $payToken)
+    /**
+     * Ejecuta una intencion de solicitud
+     * @param PaymentIntent $paymentIntent
+     * @param type $pin
+     * @param array $transactions
+     * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult
+     */
+    public function executeRequest(PaymentIntent $paymentIntent,$pin,array $transactions)
     {
         $data  = [
             "payment_execution" => [
@@ -108,5 +129,18 @@ class RoutePaymentIntent extends ModelRoute
                 "pin" => $pin,
             ],
         ];
+        foreach ($transactions as $transaction) {
+            $data["payment_execution"]["transactions"][] = [
+                "id" => $transaction->getId(),
+                "payToken" => $transaction->getPayTokenToUse()->getId(),
+            ];
+        }
+        
+        $href = $paymentIntent->getLink("execute")->getHref();
+        $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"POST",$href,[
+            "form_params" => $data,
+        ]);
+        
+        return $transactionResult;
     }
 }

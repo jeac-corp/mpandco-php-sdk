@@ -66,6 +66,18 @@ class Transaction extends ModelBase
      * Cuenta electronica a la cual se abonara el pago
      */
     private $digitalAccountDestination;
+    
+    /**
+     * Distribucion de dinero
+     * @var Transaction\Distribution 
+     */
+    private $distributions;
+    
+    /**
+     * Variable volatil del token a ejecutar en la transaccion
+     * @var \JeacCorp\Mpandco\Api\Payment\Transaction\PayToken 
+     */
+    private $payTokenToUse;
 
     /**
      * Constructor
@@ -74,6 +86,7 @@ class Transaction extends ModelBase
     {
         $this->items = new \Doctrine\Common\Collections\ArrayCollection();
         $this->payTokens = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->distributions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -235,5 +248,53 @@ class Transaction extends ModelBase
     {
         $this->digitalAccountDestination = $digitalAccountDestination;
         return $this;
+    }
+    
+    /**
+     * @return Transaction\Distribution
+     */
+    public function getDistributions()
+    {
+        return $this->distributions;
+    }
+
+    public function addDistribution(Transaction\Distribution $distribution)
+    {
+        $distribution->setTransaction($this);
+        $this->distributions[] = $distribution;
+        return $this;
+    }
+
+    /**
+     * Remove Distribution
+     *
+     * @param Transaction\Distribution
+     */
+    public function removeDistribution(Transaction\Distribution $distribution)
+    {
+        $this->distributions->removeElement($distribution);
+    }
+    
+    public function setPayTokenToUse(\JeacCorp\Mpandco\Api\Payment\Transaction\PayToken $payTokenToUse)
+    {
+        $this->payTokenToUse = $payTokenToUse;
+        return $this;
+    }
+    
+    /**
+     * Retorna el token de pago a usar en la transaccion
+     * @return Transaction\PayToken
+     * @throws \JeacCorp\Mpandco\Exception\PayTokenRequiredException
+     */
+    public function getPayTokenToUse()
+    {
+        if(empty($this->payTokenToUse)){
+            if($this->payTokens->count() > 0){
+                throw new \JeacCorp\Mpandco\Exception\PayTokenRequiredException($this->payTokens->count());
+            }else{
+                $this->payTokenToUse = $this->payTokens->get(0);
+            }
+        }
+        return $this->payTokenToUse;
     }
 }

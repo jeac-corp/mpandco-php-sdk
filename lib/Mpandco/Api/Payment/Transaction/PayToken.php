@@ -12,7 +12,6 @@
 namespace JeacCorp\Mpandco\Api\Payment\Transaction;
 
 use JeacCorp\Mpandco\Model\Base\ModelBase;
-use JeacCorp\Mpandco\Api\User\DigitalAccount;
 
 /**
  * Token de pago para una transaccion
@@ -27,18 +26,9 @@ class PayToken extends ModelBase
      */
     private $transaction;
     
-    /**
-     * Cuenta electronica de la cual se realizara el pago
-     * @var \JeacCorp\Mpandco\Api\User\DigitalAccount
-     */
-    private $digitalAccount;
     
     public function getTransaction() {
         return $this->transaction;
-    }
-
-    public function getDigitalAccount() {
-        return $this->digitalAccount;
     }
 
     public function setTransaction(\JeacCorp\Mpandco\Api\Payment\Transaction $transaction) {
@@ -46,8 +36,4 @@ class PayToken extends ModelBase
         return $this;
     }
 
-    public function setDigitalAccount(DigitalAccount $digitalAccount) {
-        $this->digitalAccount = $digitalAccount;
-        return $this;
-    }
 }

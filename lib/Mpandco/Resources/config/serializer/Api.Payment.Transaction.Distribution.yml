@@ -1,0 +1,16 @@
+JeacCorp\Mpandco\Api\Payment\Transaction\Distribution:
+    exclusion_policy: ALL
+    properties:
+        state:
+            expose: true
+            type: string
+        digitalAccountDestination:
+            expose: true
+#            type: JeacCorp\Mpandco\Api\User\DigitalAccount
+            type: string
+        amount:
+            expose: true
+            type: float
+        description:
+            expose: true
+            type: string
