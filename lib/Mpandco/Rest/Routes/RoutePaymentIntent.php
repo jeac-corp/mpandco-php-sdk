@@ -146,4 +146,24 @@ class RoutePaymentIntent extends ModelRoute
 //        print_r($data);
         return $transactionResult;
     }
+    
+    /**
+     * Anula una intencion de pago ejecutada. (en las primeras 24 horas)
+     * @param PaymentIntent $paymentIntent
+     * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult
+     */
+    public function cancel(PaymentIntent $paymentIntent)
+    {
+        $data  = [
+            "cancel_payment_intent" => [
+                "paymentIntent" => $paymentIntent->getId(),
+            ],
+        ];
+        $href = $paymentIntent->getLink("cancel")->getHref();
+        $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"POST",$href,[
+            "form_params" => $data,
+        ]);
+        
+        return $transactionResult;
+    }
 }

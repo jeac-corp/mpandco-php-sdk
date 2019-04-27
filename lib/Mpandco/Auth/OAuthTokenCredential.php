@@ -278,6 +278,17 @@ class OAuthTokenCredential
         return $this->accessToken;
     }
     
+    /**
+     * Forzar a expirar el token en cache.
+     * @param type $config
+     */
+    public function expire($config)
+    {
+        $this->tokenExpiresIn = time() + self::$expiryBufferTime;
+        $this->accessToken = null;
+        AuthorizationCache::push($config, $this->clientId, $this->encrypt($this->accessToken), $this->tokenCreateTime, $this->tokenExpiresIn);
+    }
+    
     private function encrypt($input)
     {
         return $this->cipher->encrypt($input);

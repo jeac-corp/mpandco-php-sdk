@@ -50,6 +50,10 @@ class OAuth2Service
      */
     public function request($type,$method, $uri, array $options = [])
     {
+        $forceRefresh = false;
+        if(isset($options["forceRefresh"])){
+            $forceRefresh = $options["forceRefresh"];
+        }
         $restService = $this->restService;
         $config = ConfigManager::getInstance()->getConfigHashmap();
         
@@ -75,6 +79,13 @@ class OAuth2Service
                 $data = json_decode((string)$response->getBody(),true);
 //                echo json_encode($data,JSON_PRETTY_PRINT);
                 $errorResponse = $this->serializer->deserialize((string)$response->getBody(),FormErrorResponse::class,"json");
+            }
+            if($response->getStatusCode() ===  401){
+                if($forceRefresh === false){
+                    $this->oAuthTokenCredential->expire($config);
+                    $options["forceRefresh"] = true;
+                    return $this->request($type, $method, $uri,$options);
+                }
             }
         } catch (ServerException $ex) {
             $response = $ex->getResponse();

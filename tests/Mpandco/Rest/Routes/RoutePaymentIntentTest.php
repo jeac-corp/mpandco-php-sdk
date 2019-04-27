@@ -160,8 +160,10 @@ class RoutePaymentIntentTest extends BaseTest
         $response = $routeSandbox->paymentIntentAutorize($pi);
         
         $transactionResult = $routePaymentIntent->executeSale($pi,$response["payer"]);
+        $pi = $transactionResult->getValue();
         $this->assertTrue($transactionResult->isSuccess());
-        $this->assertEquals(PaymentIntent::STATE_EXECUTED,$transactionResult->getValue()->getState());
+        $this->assertEquals(PaymentIntent::STATE_EXECUTED,$pi->getState());
+        $this->assertNotNull($pi->getLink("cancel")->getHref(),"No se encontro el enlace de cancel");
     }
     
     /**
@@ -169,7 +171,6 @@ class RoutePaymentIntentTest extends BaseTest
      */
     public function testExecuteRequest()
     {
-        $routeSandbox = $this->getRouteService()->getSandbox();
         $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
         
         $transactionResult = $this->testGenerateRequest();
@@ -179,11 +180,31 @@ class RoutePaymentIntentTest extends BaseTest
         
         $pin = "1111";
         $transactionResult = $routePaymentIntent->executeRequest($pi,$pin);
-//        var_dump($transactionResult->getHttpStatus());
-//        echo((string)$transactionResult->getResponse()->getBody());
+
         $pi = $transactionResult->getValue();
         $this->assertTrue($transactionResult->isSuccess());
         $this->assertEquals(PaymentIntent::STATE_EXECUTED,$pi->getState());
+        $this->assertNotNull($pi->getLink("cancel")->getHref(),"No se encontro el enlace de cancel");
+        
+        return $transactionResult;
+    }
+    
+    /**
+     * Anula una intencion de pago ejecutada
+     */
+    public function testCancel()
+    {
+        $transactionResult = $this->testExecuteRequest();
+        
+        $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
+        
+        $transactionResult = $routePaymentIntent->cancel($transactionResult->getValue());
+//        var_dump($transactionResult->getHttpStatus());
+//        echo((string)$transactionResult->getResponse()->getBody());
+        $pi = $transactionResult->getValue();
+        $this->assertEquals(200, $transactionResult->getHttpStatus());
+        $this->assertTrue($transactionResult->isSuccess());
+        $this->assertEquals(PaymentIntent::STATE_ANNULLED,$pi->getState(), sprintf("No se pudo anular (%s)",$pi->getState()));
     }
 
     /**
@@ -205,6 +226,7 @@ class RoutePaymentIntentTest extends BaseTest
      */
     private function checkData(TransactionResult $transactionResult)
     {
+//        echo((string)$transactionResult->getResponse()->getBody());
         $this->assertEquals(200, $transactionResult->getHttpStatus());
         $pi = $transactionResult->getValue();
         $this->assertInstanceOf(PaymentIntent::class,$pi);

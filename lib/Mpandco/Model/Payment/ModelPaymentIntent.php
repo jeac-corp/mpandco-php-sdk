@@ -57,6 +57,11 @@ abstract class ModelPaymentIntent extends ModelBase
     const STATE_CANCELED = "canceled";
     
     /**
+     * Estatus: Anulado (se reversa el pago)
+     */
+    const STATE_ANNULLED = "annulled";
+    
+    /**
      * Resumen de la intencion
      * @return string
      */
