@@ -58,6 +58,8 @@ class RestService
      * @param type $uri
      * @param array $options
      * @return \GuzzleHttp\Psr7\Response
+     * @example para enviar data en POST mandar en "form_params"
+     * @example para enviar data en GET mandar en "query"
      */
     public function request($method, $uri, array $options = []) {
 //     var_dump($options);

@@ -27,48 +27,11 @@ use JeacCorp\Mpandco\Model\OAuth\TransactionResult;
 class RoutePaymentIntentTest extends BaseTest
 {
     /**
-     * @return RoutePaymentIntent
-     */
-    private function getRoutePaymentIntent()
-    {
-        $routeService = $this->getRouteService();
-
-        $routePaymentIntent = $routeService->getPaymentIntent();
-        $this->assertInstanceOf(RoutePaymentIntent::class, $routePaymentIntent);
-        
-        return $routePaymentIntent;
-    }
-    
-    private function checkData(TransactionResult $transactionResult)
-    {
-        $this->assertEquals(200, $transactionResult->getHttpStatus());
-        $pi = $transactionResult->getValue();
-        $this->assertInstanceOf(PaymentIntent::class,$pi);
-        
-        $this->assertNotNull($pi->getId());
-//        $this->assertEquals(PaymentIntent::INTENT_SALE, $pi->getIntent());
-        $this->assertEquals(PaymentIntent::STATE_CREATED, $pi->getState());
-        $this->assertEquals("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200", $pi->getRedirectUrls()->getCancelUrl());
-        $this->assertEquals("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200", $pi->getRedirectUrls()->getReturnUrl());
-        
-        $transaction = $pi->getTransactions()->get(0);
-        $this->assertEquals("Compra por eBay", $transaction->getDescription());
-        $this->assertEquals("20", $transaction->getAmount()->getTotal());
-        $this->assertEquals("telefono", $transaction->getItems()->get(0)->getName());
-        $this->assertEquals("7.5", $transaction->getItems()->get(0)->getPrice());
-        
-        $this->assertNotNull($pi->getLink("self")->getHref());
-        $this->assertNotNull($pi->getLink("execute")->getHref());
-        $this->assertNotNull($pi->getLink("approval_url")->getHref());
-    }
-
-
-    /**
      * Generar intención de pago (Botón de pago).
      */
     public function testGenerateSale()
     {
-        $routePaymentIntent = $this->getRoutePaymentIntent();
+        $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
 
         $redirectUrls = new \JeacCorp\Mpandco\Api\Payment\RedirectUrls();
         $redirectUrls->setCancelUrl("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200")
@@ -97,6 +60,9 @@ class RoutePaymentIntentTest extends BaseTest
         $transactionResult = $routePaymentIntent->generate($paymentIntent);
         
         $this->checkData($transactionResult);
+        $pi = $transactionResult->getValue();
+        $this->assertEquals(PaymentIntent::INTENT_SALE, $pi->getIntent());
+        $this->assertNotNull($pi->getLink("approval_url")->getHref(),"No se encontro el enlace de approval_url");
         
         return $transactionResult;
     }
@@ -106,7 +72,19 @@ class RoutePaymentIntentTest extends BaseTest
      */
     public function testGenerateRequest()
     {
-        $routePaymentIntent = $this->getRoutePaymentIntent();
+        $routeSandbox = $this->getRouteService()->getSandbox();
+        $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
+        $steps = [
+            'Given check requirement for execution',
+            'Given a global client "natural" phone with "584125550002"',
+            'Given a global client "natural" phone with "584125550001"',
+            'Given I added "50000" to "available" balance',
+            'Given a global client "business" phone with "584125550000"',
+            'Given I am logged in api as "584125550000"',
+            'Given I "authorized" digital account "J255500006" to received in app',
+            'Given I set username "demo04" to digital account "J255500006"',
+        ];
+        $routeSandbox->behatStepsAction($steps);
 
         $redirectUrls = new \JeacCorp\Mpandco\Api\Payment\RedirectUrls();
         $redirectUrls->setCancelUrl("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200")
@@ -128,7 +106,7 @@ class RoutePaymentIntentTest extends BaseTest
         $paymentIntent = new PaymentIntent();
         $paymentIntent
                 ->setIntent(PaymentIntent::INTENT_REQUEST)
-                ->setRecipient("V25550099")
+                ->setRecipient("04125550001")
                 ;
         $paymentIntent
                 ->setRedirectUrls($redirectUrls)
@@ -136,9 +114,12 @@ class RoutePaymentIntentTest extends BaseTest
         $paymentIntent->addTransaction($transaction);
         
         $transactionResult = $routePaymentIntent->generate($paymentIntent);
-        var_dump($transactionResult->getErrorResponse()->getOneError());
+
         
         $this->checkData($transactionResult);
+        $pi = $transactionResult->getValue();
+        $this->assertEquals(PaymentIntent::INTENT_REQUEST, $pi->getIntent());
+        $this->assertNull($pi->getLink("approval_url")->getHref(),"No deberia tener enlace de approval_url");
         
         return $transactionResult;
     }
@@ -148,7 +129,7 @@ class RoutePaymentIntentTest extends BaseTest
      */
     public function testGet()
     {
-        $routePaymentIntent = $this->getRoutePaymentIntent();
+        $routePaymentIntent = $this->getPaymentIntent();
         
         $transactionResult = $this->testGenerateSale();
         $this->assertTrue($transactionResult->isSuccess());
@@ -167,9 +148,8 @@ class RoutePaymentIntentTest extends BaseTest
      */
     public function testExecuteSale()
     {
-        $routeService = $this->getRouteService();
-        $routeSandbox = $routeService->getRouteSandbox();
-        $routePaymentIntent = $this->getRoutePaymentIntent();
+        $routeSandbox = $this->getRouteService()->getSandbox();
+        $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
         
         $transactionResult = $this->testGenerateSale();
         $this->assertTrue($transactionResult->isSuccess());
@@ -185,25 +165,62 @@ class RoutePaymentIntentTest extends BaseTest
     }
     
     /**
-     * Prueba la ejecucion de una intencion de solicitud
+     * Prueba la ejecucion de una intencion de solicitud (facturacion)
      */
     public function testExecuteRequest()
     {
-        $routeService = $this->getRouteService();
-        $routeSandbox = $routeService->getRouteSandbox();
-        $routePaymentIntent = $this->getRoutePaymentIntent();
+        $routeSandbox = $this->getRouteService()->getSandbox();
+        $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
         
-        $transactionResult = $this->testGenerateSale();
+        $transactionResult = $this->testGenerateRequest();
         $this->assertTrue($transactionResult->isSuccess());
         
         $pi = $transactionResult->getValue();
         
-        //Autorizar
-        $response = $routeSandbox->paymentIntentAutorize($pi);
-        
-        $transactionResult = $routePaymentIntent->executeSale($pi,$response["payer"]);
+        $pin = "1111";
+        $transactionResult = $routePaymentIntent->executeRequest($pi,$pin);
+//        var_dump($transactionResult->getHttpStatus());
+//        echo((string)$transactionResult->getResponse()->getBody());
+        $pi = $transactionResult->getValue();
         $this->assertTrue($transactionResult->isSuccess());
-        $this->assertEquals(PaymentIntent::STATE_EXECUTED,$transactionResult->getValue()->getState());
+        $this->assertEquals(PaymentIntent::STATE_EXECUTED,$pi->getState());
     }
 
+    /**
+     * @return RoutePaymentIntent
+     */
+    private function getPaymentIntent()
+    {
+        $routeService = $this->getRouteService();
+
+        $routePaymentIntent = $routeService->getPaymentIntent();
+        $this->assertInstanceOf(RoutePaymentIntent::class, $routePaymentIntent);
+        
+        return $routePaymentIntent;
+    }
+    
+    /**
+     * Verifica data
+     * @param TransactionResult $transactionResult
+     */
+    private function checkData(TransactionResult $transactionResult)
+    {
+        $this->assertEquals(200, $transactionResult->getHttpStatus());
+        $pi = $transactionResult->getValue();
+        $this->assertInstanceOf(PaymentIntent::class,$pi);
+        
+        $this->assertNotNull($pi->getId());
+        $this->assertEquals(PaymentIntent::STATE_CREATED, $pi->getState());
+        $this->assertEquals("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200", $pi->getRedirectUrls()->getCancelUrl());
+        $this->assertEquals("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200", $pi->getRedirectUrls()->getReturnUrl());
+        
+        $transaction = $pi->getTransactions()->get(0);
+        $this->assertEquals("Compra por eBay", $transaction->getDescription());
+        $this->assertEquals("20", $transaction->getAmount()->getTotal());
+        $this->assertEquals("telefono", $transaction->getItems()->get(0)->getName());
+        $this->assertEquals("7.5", $transaction->getItems()->get(0)->getPrice());
+        
+        $this->assertNotNull($pi->getLink("self")->getHref());
+        $this->assertNotNull($pi->getLink("execute")->getHref(),"No se encontro el enlace de execute");
+    }
 }

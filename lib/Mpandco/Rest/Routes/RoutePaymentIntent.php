@@ -121,8 +121,11 @@ class RoutePaymentIntent extends ModelRoute
      * @param array $transactions
      * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult
      */
-    public function executeRequest(PaymentIntent $paymentIntent,$pin,array $transactions)
+    public function executeRequest(PaymentIntent $paymentIntent,$pin,array $transactions = [])
     {
+        if(count($transactions) === 0){
+            $transactions = $paymentIntent->getTransactions();
+        }
         $data  = [
             "payment_execution" => [
                 "transactions" => [],
@@ -140,7 +143,7 @@ class RoutePaymentIntent extends ModelRoute
         $transactionResult = $this->oAuth2Service->request(PaymentIntent::class,"POST",$href,[
             "form_params" => $data,
         ]);
-        
+//        print_r($data);
         return $transactionResult;
     }
 }

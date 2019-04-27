@@ -50,7 +50,7 @@ class RouteService
     /**
      * @return Routes\RouteSandbox
      */
-    public function getRouteSandbox()
+    public function getSandbox()
     {
         return $this->getRoute(Routes\RouteSandbox::class);
     }

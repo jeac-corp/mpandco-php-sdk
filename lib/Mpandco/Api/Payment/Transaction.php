@@ -275,6 +275,11 @@ class Transaction extends ModelBase
         $this->distributions->removeElement($distribution);
     }
     
+    /**
+     * Establece el token de pago a usar
+     * @param \JeacCorp\Mpandco\Api\Payment\Transaction\PayToken $payTokenToUse
+     * @return $this
+     */
     public function setPayTokenToUse(\JeacCorp\Mpandco\Api\Payment\Transaction\PayToken $payTokenToUse)
     {
         $this->payTokenToUse = $payTokenToUse;
@@ -289,7 +294,7 @@ class Transaction extends ModelBase
     public function getPayTokenToUse()
     {
         if(empty($this->payTokenToUse)){
-            if($this->payTokens->count() > 0){
+            if($this->payTokens->count() > 1){
                 throw new \JeacCorp\Mpandco\Exception\PayTokenRequiredException($this->payTokens->count());
             }else{
                 $this->payTokenToUse = $this->payTokens->get(0);
