@@ -4,7 +4,8 @@ namespace JeacCorp\Test\Mpandco\Api\Payment;
 
 use JeacCorp\Test\Mpandco\BaseTest;
 use JeacCorp\Mpandco\Api\Payment\PaymentIntent;
-use JeacCorp\Mpandco\Rest\Client;
+use JeacCorp\Mpandco\Rest\ApiContext;
+use JMS\Serializer\SerializerInterface;
 
 /**
  * Test de intencion de pago
@@ -16,13 +17,14 @@ class PaymentIntentTest extends BaseTest
 
     public function testUnserialize()
     {
-        $client = new Client();
+        $apiContext = new ApiContext();
+        $serializer = $apiContext->get(SerializerInterface::class);
         $data = $this->getJsonPaymentIntent();
-        $paymentIntent = $client->getSerializer()->deserialize($data,PaymentIntent::class,"json");
+        $paymentIntent = $serializer->deserialize($data,PaymentIntent::class,"json");
         $this->checkData($paymentIntent);
 
-        $data = $client->getSerializer()->serialize($paymentIntent,"json");
-        $paymentIntent = $client->getSerializer()->deserialize($data,PaymentIntent::class,"json");
+        $data = $serializer->serialize($paymentIntent,"json");
+        $paymentIntent = $serializer->deserialize($data,PaymentIntent::class,"json");
         $this->checkData($paymentIntent);
     }
     

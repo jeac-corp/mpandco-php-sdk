@@ -41,8 +41,8 @@ if (PHP_SAPI == 'cli') {
 </head>
 
 <body data-spy="scroll" data-target="#leftNavigation" data-offset="15" class="scrollspy-example">
-    hello!!!
+    Bienvenido al ambiente de pruebas:<br/>
     <a href="payments/CreatePayment.php" class="btn btn-primary pull-left execute">
-                                    Try It
+                                    Crear intención de pago
                                     <i class="fa fa-play-circle-o"></i></a>
 </body>

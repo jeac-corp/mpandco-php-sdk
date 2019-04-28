@@ -12,8 +12,9 @@
 namespace JeacCorp\Test\Mpandco\Model\OAuth;
 
 use JeacCorp\Test\Mpandco\BaseTest;
-use JeacCorp\Mpandco\Rest\Client;
+use JeacCorp\Mpandco\Rest\ApiContext;
 use JeacCorp\Mpandco\Model\OAuth\FormErrorResponse;
+use JMS\Serializer\SerializerInterface;
 
 /**
  * Pruebas del error 400 de symfony en el formulario
@@ -24,9 +25,10 @@ class FormErrorResponseTest extends BaseTest
 {
     public function testUnserialize()
     {
-        $client = new Client();
+        $apiContext = new ApiContext();
+        $serializer = $apiContext->get(SerializerInterface::class);
         $data = $this->getJsonError();
-        $errorResponse = $client->getSerializer()->deserialize($data,FormErrorResponse::class,"json");
+        $errorResponse = $serializer->deserialize($data,FormErrorResponse::class,"json");
         $this->checkData($errorResponse);
 
     }

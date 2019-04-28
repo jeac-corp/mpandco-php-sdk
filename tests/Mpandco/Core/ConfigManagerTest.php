@@ -26,7 +26,7 @@ class ConfigManagerTest extends BaseTest
         
         $this->assertCount(0, $configManager->get("invalid"));
         $this->assertEquals("sandbox",$configManager->get("mode"));
-        $this->assertEquals("http://app.mpandco.local",$configManager->get("oauth.base_uri"));
+        $this->assertEquals("http://app.mpandco.local/app_test.php/",$configManager->get("oauth.base_uri"));
     }
     
     public function testFromArray() {

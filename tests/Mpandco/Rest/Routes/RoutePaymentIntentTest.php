@@ -20,6 +20,7 @@ use JeacCorp\Mpandco\Api\Payment\Transaction\Amount;
 use JeacCorp\Mpandco\Model\OAuth\TransactionResult;
 use JeacCorp\Mpandco\Api\Payment\Transaction\Distribution;
 use JeacCorp\Mpandco\Api\User\DigitalAccount;
+use JeacCorp\Mpandco\Api\Payment\RedirectUrls;
 
 /**
  * Prueba de rutas de intencion de pago
@@ -35,7 +36,7 @@ class RoutePaymentIntentTest extends BaseTest
     {
         $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
 
-        $redirectUrls = new \JeacCorp\Mpandco\Api\Payment\RedirectUrls();
+        $redirectUrls = new RedirectUrls();
         $redirectUrls->setCancelUrl("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200")
                 ->setReturnUrl("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200");
 

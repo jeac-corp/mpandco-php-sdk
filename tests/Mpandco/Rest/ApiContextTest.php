@@ -12,36 +12,36 @@
 namespace JeacCorp\Test\Mpandco\Rest;
 
 use JeacCorp\Test\Mpandco\BaseTest;
-use JeacCorp\Mpandco\Rest\Client;
+use JeacCorp\Mpandco\Rest\ApiContext;
 
 /**
  * Prueba del cliente
  *
  * @author Carlos Mendoza <inhack20@gmail.com>
  */
-class ClientTest extends BaseTest
+class ApiContextTest extends BaseTest
 {
     public function testInit()
     {
-        $clientId = "asd";
-        $client = new Client([
+        $apiContextId = "asd";
+        $apiContext = new ApiContext([
             "clientId" => "asd",
             "clientSecret" => "fff",
             "use_ini" => false,
         ]);
-        $routeService = $client->getContainer()->get(\JeacCorp\Mpandco\Rest\RouteService::class);
+        $routeService = $apiContext->getContainer()->get(\JeacCorp\Mpandco\Rest\RouteService::class);
         $this->assertInstanceOf(\JeacCorp\Mpandco\Rest\RouteService::class, $routeService);
         
-        $this->assertEquals($clientId,$client->getConfig()->get("clientId"));
+        $this->assertEquals($apiContextId,$apiContext->getConfig()->get("clientId"));
         
-        $client = new Client([
+        $apiContext = new ApiContext([
             "clientId" => "asd",
             "clientSecret" => "fff",
         ]);
-        $this->assertEquals("1_id_8217d6084e785f4448dd4c75aabe5d81",$client->getConfig()->get("clientId"));
+        $this->assertEquals("1_id_8217d6084e785f4448dd4c75aabe5d81",$apiContext->getConfig()->get("clientId"));
         
-        $client = new Client([
+        $apiContext = new ApiContext([
         ]);
-        $this->assertEquals("1_id_8217d6084e785f4448dd4c75aabe5d81",$client->getConfig()->get("clientId"));
+        $this->assertEquals("1_id_8217d6084e785f4448dd4c75aabe5d81",$apiContext->getConfig()->get("clientId"));
     }
 }

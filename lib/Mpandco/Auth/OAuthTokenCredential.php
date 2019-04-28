@@ -254,7 +254,7 @@ class OAuthTokenCredential
      */
     private function generateAccessToken($config, $refreshToken = null)
     {
-        $params = array('grant_type' => 'client_credentials');
+        $params = array('grant_type' => 'urn:client_apps');
         if ($refreshToken != null) {
             // If the refresh token is provided, it would get access token using refresh token
             // Used for Future Payments

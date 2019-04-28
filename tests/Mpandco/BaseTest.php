@@ -21,13 +21,13 @@ use PHPUnit\Framework\TestCase;
 abstract class BaseTest extends TestCase
 {
     /**
-     * @return \JeacCorp\Mpandco\Rest\Client
+     * @return \JeacCorp\Mpandco\Rest\ApiContext
      */
-    protected function getClient()
+    protected function getApiContext()
     {
-        $client = new \JeacCorp\Mpandco\Rest\Client([
+        $apiContext = new \JeacCorp\Mpandco\Rest\ApiContext([
         ]);
-        return $client;
+        return $apiContext;
     }
     
     /**
@@ -35,7 +35,7 @@ abstract class BaseTest extends TestCase
      */
     protected function getRouteService()
     {
-        $client = $this->getClient();
-        return $client->getContainer()->get(\JeacCorp\Mpandco\Rest\RouteService::class);
+        $apiContext = $this->getApiContext();
+        return $apiContext->getContainer()->get(\JeacCorp\Mpandco\Rest\RouteService::class);
     }
 }

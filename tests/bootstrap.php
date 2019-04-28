@@ -12,3 +12,10 @@ $loader->addPsr4('JeacCorp\\Test\\', __DIR__);
 if (!defined("PP_CONFIG_PATH")) {
     define("PP_CONFIG_PATH", __DIR__);
 }
+
+// Remplazar los valores por tus propias llaves generadas en ClientId and SecretId visitando https://test.mpandco.com/s/samp/client/oauth/
+$clientId = '1_id_8217d6084e785f4448dd4c75aabe5d81';
+$clientSecret = 'secret_a8f5f167f44f4964e6c998dee827110c';
+
+/** @var JeacCorp\Mpandco\Rest\Client $apiContext */
+//$apiContext = getApiContext($clientId, $clientSecret);
