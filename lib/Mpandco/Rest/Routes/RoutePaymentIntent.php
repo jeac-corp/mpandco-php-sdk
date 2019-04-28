@@ -4,6 +4,7 @@ namespace JeacCorp\Mpandco\Rest\Routes;
 
 use JeacCorp\Mpandco\Model\Base\ModelRoute;
 use JeacCorp\Mpandco\Api\Payment\PaymentIntent;
+use JeacCorp\Mpandco\Model\Core\Paginator;
 
 /**
  * Rutas de intencion de pago
@@ -21,6 +22,11 @@ class RoutePaymentIntent extends ModelRoute
      * GET: Obtiene una intencion de pago
      */
     const GET  = "api/payment-intent/show.json";
+    
+    /**
+     * GET: Obtiene un paginador con el historial de las intenciones de pagos
+     */
+    const PAGINATOR = "api/payment-intent/.json";
     
     /**
      * 
@@ -194,6 +200,17 @@ class RoutePaymentIntent extends ModelRoute
             "form_params" => $data,
         ]);
         
+        return $transactionResult;
+    }
+    
+    /**
+     * Obtiene un paginador con las intenciones generadas
+     * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult
+     */
+    public function getPaginator()
+    {
+        $transactionResult = $this->createPaginator(self::PAGINATOR,PaymentIntent::class);
+       
         return $transactionResult;
     }
 }

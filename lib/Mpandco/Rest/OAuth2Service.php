@@ -72,6 +72,7 @@ class OAuth2Service
         try {
             $response = $excecute($method, $uri, $options,$token);
             $data = (string)$response->getBody();
+//            echo json_encode($data,JSON_PRETTY_PRINT);
             $value = $this->serializer->deserialize($data, $type,"json");
         } catch (ClientException $ex) {
             $response = $ex->getResponse();

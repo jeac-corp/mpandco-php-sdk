@@ -1,0 +1,9 @@
+JeacCorp\Mpandco\Api\Link:
+    exclusion_policy: ALL
+    properties:
+        href:
+            expose: true
+            type: string
+        method:
+            expose: true
+            type: string

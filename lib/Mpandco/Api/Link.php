@@ -11,8 +11,6 @@
 
 namespace JeacCorp\Mpandco\Api;
 
-use JMS\Serializer\Annotation\Type;
-
 /**
  * Enlace
  *
@@ -23,14 +21,12 @@ class Link
     /**
      * Enlace
      * @var string
-     * @Type("string")
      */
     private $href;
     
     /**
      * Metodo
      * @var string 
-     * @Type("string")
      */
     private $method;
     

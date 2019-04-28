@@ -1,0 +1,19 @@
+JeacCorp\Mpandco\Model\Core\Paginator\Metadata:
+    exclusion_policy: ALL
+    properties:
+        currentPage:
+            expose: true
+            type: integer
+            serialized_name: currentPage
+        maxPerPage:
+            expose: true
+            type: integer
+            serialized_name: maxPerPage
+        totalPages:
+            expose: true
+            type: integer
+            serialized_name: totalPages
+        totalResults:
+            expose: true
+            type: integer
+            serialized_name: totalResults

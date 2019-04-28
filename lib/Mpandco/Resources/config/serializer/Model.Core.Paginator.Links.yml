@@ -1,0 +1,15 @@
+JeacCorp\Mpandco\Model\Core\Paginator\Links:
+    exclusion_policy: ALL
+    properties:
+        first:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Link
+        self:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Link
+        next:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Link
+        last:
+            expose: true
+            type: JeacCorp\Mpandco\Api\Link

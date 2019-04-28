@@ -1,0 +1,12 @@
+JeacCorp\Mpandco\Model\Core\Paginator:
+    exclusion_policy: ALL
+    properties:
+        meta:
+            expose: true
+            type: JeacCorp\Mpandco\Model\Core\Paginator\Metadata
+        links:
+            expose: true
+            type: JeacCorp\Mpandco\Model\Core\Paginator\Links
+        data:
+            expose: true
+            type: array

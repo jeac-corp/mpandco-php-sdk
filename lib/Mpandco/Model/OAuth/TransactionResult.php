@@ -83,4 +83,14 @@ class TransactionResult
     {
         return $this->errorResponse;
     }
+    
+    public function __toString()
+    {
+        $d = "";
+        if($this->isSuccess()){
+            $d1 = json_decode((string)$this->getResponse()->getBody());
+            $d = json_encode($d1,JSON_PRETTY_PRINT);
+        }
+        return $d;
+    }
 }
