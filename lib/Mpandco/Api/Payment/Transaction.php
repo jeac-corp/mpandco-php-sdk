@@ -64,6 +64,7 @@ class Transaction extends ModelBase
     
     /**
      * Cuenta electronica a la cual se abonara el pago
+     * @var \JeacCorp\Mpandco\Api\User\DigitalAccount
      */
     private $digitalAccountDestination;
     
@@ -239,12 +240,15 @@ class Transaction extends ModelBase
         return $this->payTokens;
     }
     
+    /**
+     * @return \JeacCorp\Mpandco\Api\User\DigitalAccount
+     */
     public function getDigitalAccountDestination()
     {
         return $this->digitalAccountDestination;
     }
 
-    public function setDigitalAccountDestination($digitalAccountDestination)
+    public function setDigitalAccountDestination(\JeacCorp\Mpandco\Api\User\DigitalAccount $digitalAccountDestination)
     {
         $this->digitalAccountDestination = $digitalAccountDestination;
         return $this;

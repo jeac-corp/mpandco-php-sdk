@@ -1,9 +1,2 @@
 JeacCorp\Mpandco\Api\Payment\Transaction\PayToken:
     exclusion_policy: ALL
-    properties:
-#        transaction:
-#            expose: true
-#            type: JeacCorp\Mpandco\Api\Payment\Transaction
-        digitalAccount:
-            expose: true
-            type: JeacCorp\Mpandco\Api\User\DigitalAccount

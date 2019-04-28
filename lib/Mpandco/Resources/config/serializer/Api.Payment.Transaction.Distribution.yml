@@ -6,8 +6,7 @@ JeacCorp\Mpandco\Api\Payment\Transaction\Distribution:
             type: string
         digitalAccountDestination:
             expose: true
-#            type: JeacCorp\Mpandco\Api\User\DigitalAccount
-            type: string
+            type: JeacCorp\Mpandco\Api\User\DigitalAccount
         amount:
             expose: true
             type: float

@@ -1,9 +1,6 @@
 JeacCorp\Mpandco\Api\Payment\Transaction:
     exclusion_policy: ALL
     properties:
-#        paymentIntent:
-#            expose: true
-#            type: JeacCorp\Mpandco\Api\Payment\PaymentIntent
         amount:
             expose: true
             type: JeacCorp\Mpandco\Api\Payment\Transaction\Amount
@@ -24,4 +21,7 @@ JeacCorp\Mpandco\Api\Payment\Transaction:
             type: ArrayCollection<JeacCorp\Mpandco\Api\Payment\Transaction\PayToken>
         digitalAccountDestination:
             expose: true
-            type: string
+            type: JeacCorp\Mpandco\Api\User\DigitalAccount
+        distributions:
+            expose: true
+            type: ArrayCollection<JeacCorp\Mpandco\Api\Payment\Transaction\Distribution>

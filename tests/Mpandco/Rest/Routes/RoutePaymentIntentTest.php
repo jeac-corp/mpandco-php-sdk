@@ -18,6 +18,8 @@ use JeacCorp\Mpandco\Api\Payment\Transaction;
 use JeacCorp\Mpandco\Api\Payment\Transaction\Item;
 use JeacCorp\Mpandco\Api\Payment\Transaction\Amount;
 use JeacCorp\Mpandco\Model\OAuth\TransactionResult;
+use JeacCorp\Mpandco\Api\Payment\Transaction\Distribution;
+use JeacCorp\Mpandco\Api\User\DigitalAccount;
 
 /**
  * Prueba de rutas de intencion de pago
@@ -63,6 +65,75 @@ class RoutePaymentIntentTest extends BaseTest
         $pi = $transactionResult->getValue();
         $this->assertEquals(PaymentIntent::INTENT_SALE, $pi->getIntent());
         $this->assertNotNull($pi->getLink("approval_url")->getHref(),"No se encontro el enlace de approval_url");
+        
+        return $transactionResult;
+    }
+    
+    /**
+     * Generar intención de pago y distribuir fondos (Botón de pago).
+     */
+    public function testGenerateDistributionSale()
+    {
+        $routeSandbox = $this->getRouteService()->getSandbox();
+        $steps = [
+            'Given check requirement for execution',
+            'Given a global client "natural" phone with "584125550002"',
+            'Given a global client "natural" phone with "584125550001"',
+            'Given I added "50000" to "available" balance',
+            'Given a global client "business" phone with "584125550000"',
+            'Given I am logged in api as "584125550000"',
+            'Given I "authorized" digital account "J255500006" to received in app',
+            'Given I "authorized" digital account "V25550002" to received in app',
+            'Given I set username "demo05" to digital account "V25550002"',
+            'Given I set username "demo06" to digital account "J255500006"'
+        ];
+        $routeSandbox->behatStepsAction($steps);
+        $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
+
+        $redirectUrls = new \JeacCorp\Mpandco\Api\Payment\RedirectUrls();
+        $redirectUrls->setCancelUrl("http://localhost:5000/payments/ExecutePayment.php?success=true&carId=200")
+                ->setReturnUrl("http://localhost:5000/payments/ExecutePayment.php?success=false&carId=200");
+
+        $amount = new Amount();
+        $amount->setTotal("20");
+        $item = new Item();
+        $item
+            ->setName("telefono")
+            ->setPrice("7.5")
+        ;
+        $distribution = new Distribution();
+        $distribution
+                ->setDigitalAccountDestination(new DigitalAccount("demo06"))
+                ->setAmount(5)
+                ->setDescription("Comision del TV")
+            ;
+        $transaction = new Transaction();
+        $transaction
+                ->setDescription("Compra por eBay")
+                ->setAmount($amount)
+                ->addItem($item)
+                ->addDistribution($distribution)
+            ;
+
+        $paymentIntent = new PaymentIntent();
+        $paymentIntent->setIntent(PaymentIntent::INTENT_SALE);
+        $paymentIntent
+                ->setRedirectUrls($redirectUrls)
+        ;
+        $paymentIntent->addTransaction($transaction);
+        
+        $transactionResult = $routePaymentIntent->generate($paymentIntent);
+//        echo((string1)$transactionResult->getResponse()->getBody());
+        $this->checkData($transactionResult);
+        
+        $pi = $transactionResult->getValue();
+//        $pi = new PaymentIntent();
+        $this->assertEquals(PaymentIntent::INTENT_SALE, $pi->getIntent());
+        $this->assertNotNull($pi->getLink("approval_url")->getHref(),"No se encontro el enlace de approval_url");
+        $d = $pi->getTransactions()->get(0)->getDistributions()->get(0);
+        $this->assertEquals($distribution->getDigitalAccountDestination()->getUsername(), $d->getDigitalAccountDestination()->getUsername());
+        $this->assertEquals($distribution->getAmount(), $d->getAmount());
+        $this->assertEquals($distribution->getDescription(), $d->getDescription());
         
         return $transactionResult;
     }

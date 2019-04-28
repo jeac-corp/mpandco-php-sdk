@@ -1,0 +1,9 @@
+JeacCorp\Mpandco\Api\User\DigitalAccount:
+    exclusion_policy: ALL
+    properties:
+        name:
+            expose: true
+            type: string
+        username:
+            expose: true
+            type: string

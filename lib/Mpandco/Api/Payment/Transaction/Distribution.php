@@ -58,7 +58,7 @@ class Distribution extends ModelDistribution
         return $this;
     }
 
-    public function setDigitalAccountDestination($digitalAccountDestination)
+    public function setDigitalAccountDestination(\JeacCorp\Mpandco\Api\User\DigitalAccount $digitalAccountDestination)
     {
         $this->digitalAccountDestination = $digitalAccountDestination;
         return $this;
@@ -92,6 +92,9 @@ class Distribution extends ModelDistribution
         return $this->state;
     }
 
+    /**
+     * @return \JeacCorp\Mpandco\Api\User\DigitalAccount
+     */
     public function getDigitalAccountDestination()
     {
         return $this->digitalAccountDestination;

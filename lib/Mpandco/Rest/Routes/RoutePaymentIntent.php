@@ -43,20 +43,50 @@ class RoutePaymentIntent extends ModelRoute
         foreach($paymentIntent->getTransactions() as $transaction){
             $t = [];
             $t["amount"]["total"] = $transaction->getAmount()->getTotal();
+            if($transaction->getAmount()->getCurrency()){
+                $t["amount"]["currency"] = $transaction->getAmount()->getCurrency()->getId();
+            }
+            if(($details = $transaction->getAmount()->getDetails()) !== null){
+                $t["amount"]["details"] = [];
+                if($details->getShipping() !== 0){
+                    $t["amount"]["details"]["shipping"] = $details->getShipping();
+                }
+                if($details->getTax() !== 0){
+                    $t["amount"]["details"]["tax"] = $details->getTax();
+                }
+                if($details->getSubTotal() !== 0){
+                    $t["amount"]["details"]["subTotal"] = $details->getSubTotal();
+                }
+            }
             $t["description"] = $transaction->getDescription();
+            if(!empty($transaction->getInvoiceNumber())){
+                $t["invoiceNumber"] = $transaction->getInvoiceNumber();
+            }
             $t["items"] = [];
+            if($transaction->getDigitalAccountDestination() !== null){
+                $t["digitalAccountDestination"] = $transaction->getDigitalAccountDestination()->getUsername();
+            }
             foreach ($transaction->getItems() as $item) {
                 $i = [
                     "name" => $item->getName(),
                     "price" => $item->getPrice(),
                 ];
+                if(!empty($item->getQuantity())){
+                    $i["quantity"] = $item->getQuantity();
+                }
+                if(!empty($item->getSku())){
+                    $i["sku"] = $item->getSku();
+                }
+                if(!empty($item->getCurrency())){
+                    $i["currency"] = $item->getCurrency()->getId();
+                }
                 $t["items"][] = $i;
             }
             if($transaction->getDistributions()->count() > 0){
                 $t["distributions"] = [];
                 foreach($transaction->getDistributions() as $distribution){
                     $d = [
-                        "digitalAccountDestination" => $distribution->getDigitalAccountDestination(),
+                        "digitalAccountDestination" => $distribution->getDigitalAccountDestination()->getUsername(),
                         "amount" => $distribution->getAmount(),
                         "description" => $distribution->getDescription(),
                     ];
