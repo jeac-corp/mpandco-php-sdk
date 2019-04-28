@@ -1,7 +1,7 @@
 <#if licenseFirst??>
 ${licenseFirst}
 </#if>
-${licensePrefix}This file is part of the Witty Growth C.A. - J406095737 package.
+${licensePrefix}This file is part of the Jeac Corporation SAS - 901221207-4 package.
 ${licensePrefix}
 ${licensePrefix}(c) www.mpandco.com
 ${licensePrefix}

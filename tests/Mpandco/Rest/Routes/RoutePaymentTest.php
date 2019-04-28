@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Witty Growth C.A. - J406095737 package.
+ * This file is part of the Jeac Corporation SAS - 901221207-4 package.
  * 
  * (c) www.mpandco.com
  * 
@@ -12,7 +12,6 @@
 namespace JeacCorp\Test\Mpandco\Rest;
 
 use JeacCorp\Test\Mpandco\BaseTest;
-use JeacCorp\Mpandco\Api\TransactionItem\Payment;
 
 /**
  * Pruebas de las rutas de pagos
@@ -21,7 +20,7 @@ use JeacCorp\Mpandco\Api\TransactionItem\Payment;
  */
 class RoutePaymentTest extends BaseTest
 {
-        /**
+    /**
      * Prueba que se retorne el paginador
      */
     public function testPaginator()

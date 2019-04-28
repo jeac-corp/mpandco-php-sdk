@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Witty Growth C.A. - J406095737 package.
+ * This file is part of the Jeac Corporation SAS - 901221207-4 package.
  * 
  * (c) www.mpandco.com
  * 
