@@ -278,6 +278,9 @@ class RoutePaymentIntentTest extends BaseTest
         $this->assertEquals(PaymentIntent::STATE_ANNULLED,$pi->getState(), sprintf("No se pudo anular (%s)",$pi->getState()));
     }
     
+    /**
+     * Prueba que se retorne el paginador
+     */
     public function testPaginator()
     {
         $routePaymentIntent = $this->getRouteService()->getPaymentIntent();
@@ -285,9 +288,6 @@ class RoutePaymentIntentTest extends BaseTest
 //        echo((string)$transactionResult);
 //        print_r($transactionResult->getValue());
         $paginator = $transactionResult->getValue();
-        if(false){
-            $paginator = new \JeacCorp\Mpandco\Model\Core\Paginator();
-        }
         $links = $paginator->getLinks();
         $this->assertNotNull($links->getFirst()->getHref());
         $this->assertNotNull($links->getLast()->getHref());
