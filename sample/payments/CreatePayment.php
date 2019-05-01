@@ -2,7 +2,6 @@
 
 require __DIR__ . '/../bootstrap.php';
 
-use JeacCorp\Mpandco\Rest\Routes\RoutePaymentIntent;
 use JeacCorp\Mpandco\Api\Payment\PaymentIntent;
 use JeacCorp\Mpandco\Api\Payment\Transaction;
 use JeacCorp\Mpandco\Api\Payment\Transaction\Item;
@@ -12,7 +11,7 @@ use JeacCorp\Mpandco\Api\Payment\RedirectUrls;
 
 $baseUrl = getBaseUrl();
 
-$routePaymentIntent = $this->getRouteService()->getPaymentIntent();
+$routePaymentIntent = $apiContext->getRouteService()->getPaymentIntent();
 
 $redirectUrls = new RedirectUrls();
 $redirectUrls->setCancelUrl("$baseUrl/ExecutePayment.php?success=false")
@@ -39,3 +38,12 @@ $paymentIntent
 $paymentIntent->addTransaction($transaction);
 
 $transactionResult = $routePaymentIntent->generate($paymentIntent);
+
+if($transactionResult->isSuccess()){
+    $paymentIntent = $transactionResult->getValue();
+    $url = $paymentIntent->getLink(PaymentIntent::URL_APPROVAL)->getHref();
+    echo sprintf("<a href='%s'>Realizar pago</a><br/>",$url);
+    echo $url;
+}else{
+    echo "Error";
+}

@@ -13,7 +13,7 @@ namespace JeacCorp\Mpandco\Auth;
 
 use JeacCorp\Mpandco\Security\Cipher;
 use JeacCorp\Mpandco\Cache\AuthorizationCache;
-use JeacCorp\Test\Mpandco\Constants;
+use JeacCorp\Mpandco\Core\AppConstants;
 use JeacCorp\Mpandco\Handler\Exception\ConfigurationException;
 use JeacCorp\Mpandco\Core\LoggingManager;
 use JeacCorp\Mpandco\Exception\ConnectionException;
@@ -228,17 +228,17 @@ class OAuthTokenCredential
         } elseif (isset($config['mode'])) {
             switch (strtoupper($config['mode'])) {
                 case 'SANDBOX':
-                    $baseEndpoint = Constants::REST_SANDBOX_ENDPOINT;
+                    $baseEndpoint = AppConstants::REST_SANDBOX_ENDPOINT;
                     break;
                 case 'LIVE':
-                    $baseEndpoint = Constants::REST_LIVE_ENDPOINT;
+                    $baseEndpoint = AppConstants::REST_LIVE_ENDPOINT;
                     break;
                 default:
                     throw new ConfigurationException('The mode config parameter must be set to either sandbox/live');
             }
         } else {
             // Defaulting to Sandbox
-            $baseEndpoint = Constants::REST_SANDBOX_ENDPOINT;
+            $baseEndpoint = AppConstants::REST_SANDBOX_ENDPOINT;
         }
 
         return $baseEndpoint;

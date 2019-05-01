@@ -62,6 +62,19 @@ abstract class ModelPaymentIntent extends ModelBase
     const STATE_ANNULLED = "annulled";
     
     /**
+     * Url: Intencion de pago actual
+     */
+    const URL_SELF = "self";
+    /**
+     * Url: Para ejecutar la intencion
+     */
+    const URL_EXECUTE = "execute";
+    /**
+     * Url: De redireccion paga pagar la intencion de pago con el boton de pago.
+     */
+    const URL_APPROVAL = "approval_url";
+    
+    /**
      * Resumen de la intencion
      * @return string
      */

@@ -37,12 +37,12 @@ if (PHP_SAPI == 'cli') {
     <meta name="author" content="">
     <link rel="icon" href="images/favicon.ico">
     
-     <title>PayPal REST API Samples</title>
+     <title>mPandco REST API Samples</title>
 </head>
 
 <body data-spy="scroll" data-target="#leftNavigation" data-offset="15" class="scrollspy-example">
     Bienvenido al ambiente de pruebas:<br/>
     <a href="payments/CreatePayment.php" class="btn btn-primary pull-left execute">
-                                    Crear intención de pago
+                                    Generar intención de pago (Botón de pago)
                                     <i class="fa fa-play-circle-o"></i></a>
 </body>

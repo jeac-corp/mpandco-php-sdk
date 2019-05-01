@@ -21,14 +21,6 @@ class AppConstants
     const SDK_NAME = 'mPandco-PHP-SDK';
     const SDK_VERSION = '1.0.0';
 
-    /**
-     * Approval URL for Payment
-     */
-    const APPROVAL_URL = 'approval_url';
-
-    const REST_SANDBOX_ENDPOINT = "https://sandbox.mpandco.com";
-    const OPENID_REDIRECT_SANDBOX_URL = "https://sandbox.mpandco.com";
-
-    const REST_LIVE_ENDPOINT = "https://app.mpandco.com/";
-    const OPENID_REDIRECT_LIVE_URL = "https://app.mpandco.com";
+    const REST_SANDBOX_ENDPOINT = 'https://test.mpandco.com/';
+    const REST_LIVE_ENDPOINT = 'https://app.mpandco.com/';
 }

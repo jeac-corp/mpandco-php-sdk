@@ -45,10 +45,8 @@ class ApiContext
         $this->configManager = ConfigManager::getInstance($configs);
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
-            "debug" => true,
+            "debug" => false,
             "cache_dir" => $rootDir . "/var/cache",
-            "clientId" => null,
-            "clientSecret" => null,
         ]);
         $this->options = $resolver->resolve($options);
 
@@ -96,13 +94,49 @@ class ApiContext
         return $this->container->get($id);
     }
     
+    /**
+     * @return \JMS\Serializer\SerializerInterface
+     */
     public function getSerializer()
     {
-        $this->container->get(\JMS\Serializer\SerializerInterface::class);
+        return $this->container->get(\JMS\Serializer\SerializerInterface::class);
     }
     
+    /**
+     * Serializa un objeto a un string en json
+     * @param type $data
+     * @return type
+     */
+    public function serialize(\JeacCorp\Mpandco\Model\Base\ModelBase $data)
+    {
+        $serialized = $this->getSerializer()->serialize($data, "json");
+        return $serialized;
+    }
+    
+    /**
+     * Desserializa un string en formato json a un objeto
+     * @param type $data
+     * @return type
+     */
+    public function deserialize($data)
+    {
+        $deserialized = $this->getSerializer()->deserialize($data, "json");
+        return $deserialized;
+    }
+    
+    /**
+     * @return ConfigManager
+     */
     public function getConfig()
     {
         return $this->configManager;
+    }
+    
+    /**
+     * @return \JeacCorp\Mpandco\Rest\RouteService
+     */
+    public function getRouteService()
+    {
+        return $this->get(\JeacCorp\Mpandco\Rest\RouteService::class);
     }
 }
