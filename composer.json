@@ -4,7 +4,7 @@
     "keywords": ["mpandco", "payments", "rest", "sdk"],
     "type": "library",
     "license": "Apache-2.0",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "authors": [
         {
