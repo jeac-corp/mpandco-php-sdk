@@ -73,9 +73,9 @@ class ResultPrinter
             }
 
             echo '<div class="row hidden-xs hidden-sm hidden-md"><div class="col-md-6"><h4>Request Object</h4>';
-            self::printObject($request->getRequest());
+            self::printObject($request !== null ? $request->getRequest(): null);
             echo '</div><div class="col-md-6"><h4 class="'. ($errorMessage ? 'error' : '') .'">Response Object</h4>';
-            self::printObject($response->isSuccess() === true ? $response->getValue() : $response->getErrorResponse(), $errorMessage);
+            self::printObject($response !== null ? ($response->isSuccess() === true ? $response->getValue() : $response->getErrorResponse()) : null, $errorMessage);
             echo '</div></div>';
 
             echo '<div class="hidden-lg"><ul class="nav nav-tabs" role="tablist">

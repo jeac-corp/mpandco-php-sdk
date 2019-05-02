@@ -2,10 +2,7 @@
 
 require __DIR__ . '/../bootstrap.php';
 
-var_dump("aa");
-die;
-// ### Approval Status
-// Determine if the user approved the payment or not
+// Se verifica si se autorizo la intencion de pago
 if (isset($_GET['success']) && $_GET['success'] == 'true') {
     $paymentIntentId = $_GET['paymentIntent'];
     $payerId = $_GET["payerId"];
