@@ -18,7 +18,7 @@
         "ext-openssl": "*",
         "guzzlehttp/guzzle": "^6.3",
         "symfony/options-resolver": "~3.4 | ~4.2",
-        "jms/serializer": "1.x-dev",
+        "jms/serializer": "^1.14",
         "league/oauth2-client": "~2.4",
         "monolog/monolog": "~1.23",
         "symfony/dependency-injection": "~3.4 | ~4.2",
@@ -30,7 +30,7 @@
     "require-dev": {
         "symfony/phpunit-bridge": "~4.2",
         "symfony/property-access": "~3.4 | ~4.2",
-        "symfony/filesystem": "^4.3@dev"
+        "symfony/filesystem": "^4.2"
     },
     "autoload": {
         "psr-4": { "JeacCorp\\": "lib/" },
