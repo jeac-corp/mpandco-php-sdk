@@ -42,8 +42,8 @@ $transactionResult = $routePaymentIntent->generate($paymentIntent);
 if($transactionResult->isSuccess()){
     $paymentIntent = $transactionResult->getValue();
     $url = $paymentIntent->getLink(PaymentIntent::URL_APPROVAL)->getHref();
-    echo sprintf("<a href='%s'>Realizar pago</a><br/>",$url);
-    echo $url;
+    echo "Pagar intencion:<br>";
+    echo sprintf("<a href='%s'>%s</a><br/>",$url,$url);
 }else{
     echo "Error";
 }

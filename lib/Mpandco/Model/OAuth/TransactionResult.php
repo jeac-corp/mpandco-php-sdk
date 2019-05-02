@@ -43,6 +43,11 @@ class TransactionResult
      * @var \GuzzleHttp\Psr7\Response
      */
     private $response;
+    /**
+     * Valor de la solicitud
+     * @var array
+     */
+    private $request;
     
     /**
      * Error en respuesta de formulario
@@ -50,13 +55,14 @@ class TransactionResult
      */
     private $errorResponse;
     
-    public function __construct($value,Response $response, FormErrorResponse $errorResponse = null)
+    public function __construct($value,Response $response, FormErrorResponse $errorResponse = null,$request = null)
     {
         $this->success = ($response->getStatusCode() >= 200 && $response->getStatusCode() <= 299);
         $this->httpStatus = $response->getStatusCode();
         $this->value = $value;
         $this->response = $response;
         $this->errorResponse = $errorResponse;
+        $this->request = $request;
     }
     
     public function isSuccess()
@@ -84,6 +90,11 @@ class TransactionResult
         return $this->errorResponse;
     }
     
+    public function getRequest()
+    {
+        return $this->request;
+    }
+        
     public function __toString()
     {
         $d = "";

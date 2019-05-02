@@ -95,7 +95,7 @@ class OAuth2Service
 //                echo json_encode($data,JSON_PRETTY_PRINT);
             }
         }
-        $rransactionResult = new TransactionResult($value,$response,$errorResponse);
+        $rransactionResult = new TransactionResult($value,$response,$errorResponse,$options);
         return $rransactionResult;
     }
 

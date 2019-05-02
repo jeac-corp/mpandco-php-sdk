@@ -4,6 +4,8 @@
     Common functions used across samples
 */
 
+use JeacCorp\Mpandco\Model\OAuth\TransactionResult;
+
 /**
  * Helper Class for Printing Results
  *
@@ -28,8 +30,9 @@ class ResultPrinter
      * @param mixed     $response
      * @param string $errorMessage
      */
-    public static function printOutput($title, $objectName, $objectId = null, $request = null, $response = null, $errorMessage = null)
+    public static function printOutput($title, $objectName, $objectId = null, TransactionResult $request = null, $errorMessage = null)
     {
+        $response = $request;
         if (PHP_SAPI == 'cli') {
             self::$printResultCounter++;
             printf("\n+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
@@ -48,8 +51,8 @@ class ResultPrinter
             if (self::$printResultCounter == 0) {
                 include "header.html";
                 echo '
-                  <div class="row header"><div class="col-md-5 pull-left"><br /><a href="../index.php"><h1 class="home">&#10094;&#10094; Back to Samples</h1></a><br /></div> <br />
-                  <div class="col-md-4 pull-right"><img src="https://www.paypalobjects.com/webstatic/developer/logo2_paypal_developer_2x.png" class="logo" width="300"/></div> </div>';
+                  <div class="row header"><div class="col-md-5 pull-left"><br /><a href="../index.php"><h1 class="home">&#10094;&#10094; Regresar a los ejemplos</h1></a><br /></div> <br />
+                  <div class="col-md-4 pull-right"><img src="https://app.mpandco.com/bundles/pandcoapp/img/logos/logo_full_bg.png" class="logo" width="300"/></div> </div>';
                 echo '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
             }
             self::$printResultCounter++;
@@ -70,9 +73,9 @@ class ResultPrinter
             }
 
             echo '<div class="row hidden-xs hidden-sm hidden-md"><div class="col-md-6"><h4>Request Object</h4>';
-            self::printObject($request);
+            self::printObject($request->getRequest());
             echo '</div><div class="col-md-6"><h4 class="'. ($errorMessage ? 'error' : '') .'">Response Object</h4>';
-            self::printObject($response, $errorMessage);
+            self::printObject($response->isSuccess() === true ? $response->getValue() : $response->getErrorResponse(), $errorMessage);
             echo '</div></div>';
 
             echo '<div class="hidden-lg"><ul class="nav nav-tabs" role="tablist">
@@ -100,9 +103,9 @@ class ResultPrinter
      * @param mixed     $request
      * @param mixed     $response
      */
-    public static function printResult($title, $objectName, $objectId = null, $request = null, $response = null)
+    public static function printResult($title, $objectName, $objectId = null, TransactionResult $request = null)
     {
-        self::printOutput($title, $objectName, $objectId, $request, $response, false);
+        self::printOutput($title, $objectName, $objectId, $request, false);
     }
 
     /**
@@ -114,13 +117,9 @@ class ResultPrinter
      * @param null $request
      * @param \Exception $exception
      */
-    public static function printError($title, $objectName, $objectId = null, $request = null, $exception = null)
+    public static function printError($title, $objectName, $objectId = null, TransactionResult $request = null)
     {
-        $data = null;
-        if ($exception instanceof \PayPal\Exception\PayPalConnectionException) {
-            $data = $exception->getData();
-        }
-        self::printOutput($title, $objectName, $objectId, $request, $data, $exception->getMessage());
+        self::printOutput($title, $objectName, $objectId, $request);
     }
 
     protected static function printConsoleObject($object, $error = null)
@@ -130,7 +129,6 @@ class ResultPrinter
         }
         if ($object) {
             if (is_a($object, 'JeacCorp\Mpandco\Model\Base\ModelBase')) {
-                /** @var $object \PayPal\Common\PayPalModel */
                 $d = self::$apiContext->serialize($object);
                 echo str_replace('\\/', '/', json_encode(json_decode($d), 128));
             } elseif (is_string($object) && \JeacCorp\Mpandco\Validation\JsonValidator::validate($object, true)) {
@@ -153,10 +151,11 @@ class ResultPrinter
             '</p>';
         }
         if ($object) {
-            if (is_a($object, 'PayPal\Common\PayPalModel')) {
-                /** @var $object \PayPal\Common\PayPalModel */
-                echo '<pre class="prettyprint '. ($error ? 'error' : '') .'">' . $object->toJSON(128) . "</pre>";
-            } elseif (is_string($object) && \PayPal\Validation\JsonValidator::validate($object, true)) {
+            if (is_a($object, 'JeacCorp\Mpandco\Model\Base\ModelBase')) {
+                $d = json_encode(json_decode(self::$apiContext->serialize($object)), 128);
+                /** @var $object \JeacCorp\Mpandco\Model\Base\ModelBase */
+                echo '<pre class="prettyprint '. ($error ? 'error' : '') .'">' . $d . "</pre>";
+            } elseif (is_string($object) && \JeacCorp\Mpandco\Validation\JsonValidator::validate($object, true)) {
                 echo '<pre class="prettyprint '. ($error ? 'error' : '') .'">'. str_replace('\\/', '/', json_encode(json_decode($object), 128)) . "</pre>";
             } elseif (is_string($object)) {
                 echo '<pre class="prettyprint '. ($error ? 'error' : '') .'">' . $object . '</pre>';

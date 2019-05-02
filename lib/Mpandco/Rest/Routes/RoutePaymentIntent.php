@@ -128,7 +128,7 @@ class RoutePaymentIntent extends ModelRoute
     }
     
     /**
-     * Ejecuta una intencoin de venta
+     * Ejecuta una intencion de venta
      * @param PaymentIntent $paymentIntent
      * @param type $payer
      * @return \JeacCorp\Mpandco\Model\OAuth\TransactionResult
@@ -151,7 +151,7 @@ class RoutePaymentIntent extends ModelRoute
     }
     
     /**
-     * Ejecuta una intencion de solicitud
+     * Ejecuta una intencion de solicitud (facturacion)
      * @param PaymentIntent $paymentIntent
      * @param type $pin
      * @param array $transactions
