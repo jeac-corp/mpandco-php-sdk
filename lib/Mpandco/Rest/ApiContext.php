@@ -118,9 +118,9 @@ class ApiContext
      * @param type $data
      * @return type
      */
-    public function deserialize($data)
+    public function deserialize($data,$type)
     {
-        $deserialized = $this->getSerializer()->deserialize($data, "json");
+        $deserialized = $this->getSerializer()->deserialize($data,$type,"json");
         return $deserialized;
     }
     
