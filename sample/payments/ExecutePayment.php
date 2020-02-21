@@ -2,6 +2,8 @@
 
 require __DIR__ . '/../bootstrap.php';
 
+use JeacCorp\Mpandco\Model\OAuth\TransactionResult;
+
 // Se verifica si se autorizo la intencion de pago
 if (isset($_GET['success']) && $_GET['success'] == 'true') {
     $paymentIntentId = $_GET['paymentIntent'];
@@ -10,6 +12,9 @@ if (isset($_GET['success']) && $_GET['success'] == 'true') {
     $paymentIntent = $transactionResult->getValue();
     
     $transactionResult = $apiContext->getRouteService()->getPaymentIntent()->executeSale($paymentIntent,$payerId);
+    if(false){
+        $transactionResult = new  TransactionResult();
+    }
     ResultPrinter::printResult("Ejecucion de intencion", "Pago", $paymentIntent->getId(), $transactionResult, $transactionResult);
     
     if($transactionResult->isSuccess()){

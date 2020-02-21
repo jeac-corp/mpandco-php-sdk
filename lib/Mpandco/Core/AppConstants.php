@@ -19,7 +19,7 @@ namespace JeacCorp\Mpandco\Core;
 class AppConstants 
 {
     const SDK_NAME = 'mPandco-PHP-SDK';
-    const SDK_VERSION = '1.0.0';
+    const SDK_VERSION = '1.0.1';
 
     const REST_SANDBOX_ENDPOINT = 'https://test.mpandco.com/';
     const REST_LIVE_ENDPOINT = 'https://app.mpandco.com/';
